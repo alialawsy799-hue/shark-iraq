@@ -1,26 +1,247 @@
 @import "tailwindcss";
 
+/* Derived from logo: deep black / white / primary blue diagonal split */
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --background: #000000;
+  --foreground: #ffffff;
+  --brand: #1e6fd9;
+  --brand-strong: #2b7eeb;
+  --brand-dim: rgba(30, 111, 217, 0.45);
+  --brand-soft: rgba(30, 111, 217, 0.12);
+  --brand-glow: 0 0 48px rgba(30, 111, 217, 0.28);
+  --muted: rgba(255, 255, 255, 0.72);
+  --muted2: rgba(255, 255, 255, 0.48);
+  --border: rgba(255, 255, 255, 0.12);
+  --border-brand: rgba(30, 111, 217, 0.45);
+  --card: rgba(255, 255, 255, 0.04);
+  --card2: rgba(255, 255, 255, 0.07);
+  --glass: rgba(255, 255, 255, 0.04);
+  --shadow: 0 20px 60px rgba(0, 0, 0, 0.6);
+  --shadow-brand: var(--shadow), 0 0 1px rgba(30, 111, 217, 0.35),
+    inset 0 1px 0 rgba(255, 255, 255, 0.06);
 }
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --color-brand: var(--brand);
+  --color-brand-foreground: #ffffff;
+  --font-sans: var(--font-brand);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+html {
+  scroll-behavior: smooth;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
   }
 }
 
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+}
+
+/* ماركيه: طبقة منفصلة + بدون transform ثابت يتعارض مع الأنيميشن — يقلّل التقطيع مع الكثير من الـ iframes */
+.shark-marquee-viewport {
+  overflow: hidden;
+  transform: translateZ(0);
+  -webkit-transform: translateZ(0);
+  isolation: isolate;
+}
+
+/* ماركيه فيديو: حلقة خطية على الـ compositor */
+@keyframes shark-marquee-x {
+  from {
+    transform: translate3d(0, 0, 0);
+  }
+  to {
+    transform: translate3d(-50%, 0, 0);
+  }
+}
+
+.shark-marquee-track {
+  width: max-content;
+  animation: shark-marquee-x var(--marquee-duration, 120s) linear infinite;
+  animation-delay: var(--marquee-delay, 0s);
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+  -webkit-font-smoothing: antialiased;
+  /* بدون will-change: مسار عريض + طبقة كبيرة قد تُقطع إذا فرضنا ترقية طبقة دائمة */
+}
+
+.shark-marquee-track--reverse {
+  animation-direction: reverse;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .shark-marquee-track {
+    animation-duration: calc(var(--marquee-duration, 120s) * 1.35);
+  }
+}
+
+body.shark-theme {
+  position: relative;
+  isolation: isolate;
+}
+
+body.shark-theme::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  background:
+    linear-gradient(
+      125deg,
+      transparent 52%,
+      rgba(30, 111, 217, 0.07) 52%,
+      rgba(30, 111, 217, 0.02) 62%,
+      transparent 72%
+    ),
+    radial-gradient(
+      120% 80% at 100% -10%,
+      rgba(30, 111, 217, 0.14),
+      transparent 52%
+    );
+}
+
+body.shark-theme > * {
+  position: relative;
+  z-index: 1;
+}
+
+::selection {
+  background: rgba(30, 111, 217, 0.35);
+  color: #fff;
+}
+
+/* Minimal scrollbar polish (webkit). */
+*::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+*::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.18);
+  border-radius: 999px;
+  border: 2px solid rgba(0, 0, 0, 0.6);
+}
+*::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.04);
+}
+
+.shark-container {
+  margin-inline: auto;
+  width: 100%;
+  max-width: 1200px;
+  /* هامش أوضح على الهاتف + احترام الشقّ الآمن (النوتش) */
+  padding-inline: max(1.125rem, env(safe-area-inset-left, 0px), env(safe-area-inset-right, 0px));
+  box-sizing: border-box;
+}
+
+@media (min-width: 640px) {
+  .shark-container {
+    padding-inline: max(1.5rem, env(safe-area-inset-left, 0px), env(safe-area-inset-right, 0px));
+  }
+}
+
+@media (max-width: 639px) {
+  body.shark-theme::before {
+    opacity: 0.45;
+  }
+}
+
+.shark-card {
+  background: linear-gradient(
+    160deg,
+    rgba(255, 255, 255, 0.07),
+    rgba(255, 255, 255, 0.02) 40%,
+    rgba(30, 111, 217, 0.04)
+  );
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: var(--shadow-brand);
+}
+
+.shark-glass {
+  background: linear-gradient(
+    145deg,
+    rgba(255, 255, 255, 0.08),
+    rgba(255, 255, 255, 0.02)
+  );
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  box-shadow: var(--brand-glow), inset 0 1px 0 rgba(255, 255, 255, 0.08);
+  backdrop-filter: blur(12px);
+}
+
+/* Decorative panel (logo-style slant + blue edge) */
+.shark-accent-panel {
+  position: absolute;
+  width: min(42vw, 320px);
+  height: 160px;
+  top: -24px;
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(30, 111, 217, 0.35);
+  box-shadow: inset 0 0 0 1px rgba(30, 111, 217, 0.2), var(--brand-glow);
+  pointer-events: none;
+}
+.shark-accent-panel--tl {
+  left: -40px;
+  transform: skewX(-12deg);
+}
+.shark-accent-panel--tr {
+  right: -40px;
+  left: auto;
+  transform: skewX(12deg);
+}
+
+/* Primary / outline CTAs aligned with logo */
+.shark-btn-primary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  height: 2.75rem;
+  padding-inline: 1.25rem;
+  border-radius: 0.75rem;
+  font-size: 0.875rem;
+  font-weight: 700;
+  color: #fff;
+  text-decoration: none;
+  background: linear-gradient(180deg, var(--brand-strong), var(--brand));
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  box-shadow: 0 8px 28px rgba(30, 111, 217, 0.35);
+  transition: transform 0.15s ease, box-shadow 0.15s ease, filter 0.15s ease;
+}
+.shark-btn-primary:hover {
+  filter: brightness(1.06);
+  box-shadow: 0 10px 36px rgba(30, 111, 217, 0.45);
+}
+.shark-btn-primary:active {
+  transform: scale(0.99);
+}
+
+.shark-btn-outline {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  height: 2.75rem;
+  padding-inline: 1.25rem;
+  border-radius: 0.75rem;
+  font-size: 0.875rem;
+  font-weight: 700;
+  color: #fff;
+  text-decoration: none;
+  background: transparent;
+  border: 1px solid rgba(30, 111, 217, 0.55);
+  box-shadow: 0 0 20px rgba(30, 111, 217, 0.12);
+  transition: background 0.15s ease, border-color 0.15s ease, transform 0.15s ease;
+}
+.shark-btn-outline:hover {
+  background: rgba(30, 111, 217, 0.1);
+  border-color: rgba(30, 111, 217, 0.85);
+}
+.shark-btn-outline:active {
+  transform: scale(0.99);
 }

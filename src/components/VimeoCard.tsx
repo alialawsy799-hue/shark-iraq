@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import { useEffect, useId, useMemo, useRef, useState } from "react";
 import Player from "@vimeo/player";
 import { Volume2, VolumeX } from "lucide-react";
@@ -12,11 +13,15 @@ type Props = {
 
 /** بطاقة فيميو: الكتم محلي حتى لا يُعاد رسم الشريط كاملاً ولا يتوقف الماركيه */
 export function VimeoCard({ slotKey, vimeoId, title }: Props) {
+  const containerRef = useRef<HTMLDivElement | null>(null);
   const iframeRef = useRef<HTMLIFrameElement | null>(null);
   const playerRef = useRef<Player | null>(null);
-  const [ready, setReady] = useState(false);
   /** false = صوت يعمل، true = صامت (افتراضياً صامت لتسمح المتصفحات بالتشغيل التلقائي) */
   const [muted, setMuted] = useState(true);
+  /** يصير true عند بدء فعلي للتشغيل — نُخفي عندها لوكو النبض */
+  const [playing, setPlaying] = useState(false);
+  /** تحميل كسول للـ iframe: نركّبه فقط عند اقتراب البطاقة من شاشة العرض */
+  const [shouldMount, setShouldMount] = useState(false);
   const stableId = useId();
 
   const src = useMemo(() => {
@@ -36,29 +41,64 @@ export function VimeoCard({ slotKey, vimeoId, title }: Props) {
     return `${base}?${params.toString()}`;
   }, [vimeoId]);
 
+  /** نراقب اقتراب البطاقة من المنفذ المرئي ونركّب الـ iframe وقتها فقط */
   useEffect(() => {
+    if (shouldMount) return;
+    const el = containerRef.current;
+    if (!el) return;
+
+    if (typeof IntersectionObserver === "undefined") {
+      setShouldMount(true);
+      return;
+    }
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        for (const entry of entries) {
+          if (entry.isIntersecting) {
+            setShouldMount(true);
+            observer.disconnect();
+            break;
+          }
+        }
+      },
+      {
+        // نبدأ التحميل قبل أن تدخل البطاقة الشاشة لتقليل الانتظار البصري
+        rootMargin: "300px 200px",
+        threshold: 0.01,
+      }
+    );
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, [shouldMount]);
+
+  useEffect(() => {
+    if (!shouldMount) return;
     if (!iframeRef.current) return;
     const p = new Player(iframeRef.current);
     playerRef.current = p;
 
-    let cancelled = false;
+    const handlePlaying = () => setPlaying(true);
+    p.on("playing", handlePlaying);
+    p.on("play", handlePlaying);
+
     (async () => {
       try {
         await p.setVolume(0);
         await p.setMuted(true);
         await p.play();
-        if (!cancelled) setReady(true);
       } catch {
-        if (!cancelled) setReady(true);
+        // سياسات التشغيل التلقائي قد تمنع الصوت — التشغيل الصامت يبقى مدعوماً
       }
     })();
 
     return () => {
-      cancelled = true;
+      p.off("playing", handlePlaying);
+      p.off("play", handlePlaying);
       playerRef.current?.destroy().catch(() => {});
       playerRef.current = null;
     };
-  }, []);
+  }, [shouldMount]);
 
   useEffect(() => {
     const p = playerRef.current;
@@ -81,6 +121,7 @@ export function VimeoCard({ slotKey, vimeoId, title }: Props) {
 
   return (
     <div
+      ref={containerRef}
       className={[
         "relative shrink-0 overflow-hidden rounded-2xl border",
         "border-white/10 bg-black shadow-[0_0_0_1px_rgba(30,111,217,0.15)]",
@@ -94,14 +135,41 @@ export function VimeoCard({ slotKey, vimeoId, title }: Props) {
       data-slot={slotKey}
       aria-label={title}
     >
-      <iframe
-        ref={iframeRef}
-        id={`vimeo-${stableId}-${slotKey}`}
-        src={src}
-        className="absolute inset-0 h-full w-full"
-        allow="autoplay; fullscreen; picture-in-picture"
-        title={title}
-      />
+      {shouldMount && (
+        <iframe
+          ref={iframeRef}
+          id={`vimeo-${stableId}-${slotKey}`}
+          src={src}
+          className="absolute inset-0 h-full w-full"
+          allow="autoplay; fullscreen; picture-in-picture"
+          title={title}
+        />
+      )}
+
+      {!playing && (
+        <div
+          className="pointer-events-none absolute inset-0 z-[1] grid place-items-center bg-black"
+          aria-hidden
+        >
+          <div
+            className="pointer-events-none absolute inset-0 opacity-90"
+            style={{
+              background:
+                "radial-gradient(ellipse 70% 60% at 50% 45%, rgba(30,111,217,0.35) 0%, rgba(30,111,217,0.08) 45%, transparent 75%)",
+            }}
+          />
+          <div className="shark-logo-pulse relative">
+            <Image
+              src="/branding/shark-logo.png"
+              alt=""
+              width={140}
+              height={48}
+              className="h-7 w-auto drop-shadow-[0_0_18px_rgba(30,111,217,0.55)] sm:h-9 md:h-10"
+              priority={false}
+            />
+          </div>
+        </div>
+      )}
 
       <button
         type="button"
@@ -121,12 +189,6 @@ export function VimeoCard({ slotKey, vimeoId, title }: Props) {
         )}
         <span>{muted ? "صامت" : "صوت"}</span>
       </button>
-
-      {!ready && (
-        <div className="absolute inset-0 grid place-items-center px-2 text-center text-[11px] text-white/70 sm:text-sm">
-          جاري التحميل…
-        </div>
-      )}
 
       <div className="pointer-events-none absolute inset-x-0 bottom-0 z-10 p-2 sm:p-2.5">
         <div className="rounded-lg border border-brand/20 bg-black/70 px-2 py-1.5 backdrop-blur-md">

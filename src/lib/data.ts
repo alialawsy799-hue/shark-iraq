@@ -49,8 +49,8 @@ export const PLACEHOLDER_VIMEO_ID = "76979871";
 export const categories: Category[] = [
   {
     slug: "supplements",
-    title: "مكملات غذائية",
-    subtitle: "أداء أعلى • تعافٍ أسرع • قوة أوضح",
+    title: "بروتينات",
+    subtitle: "بناء عضل • تعافٍ أسرع • قوة أوضح",
     imageHint: "supplements icon",
     introAr:
       "المكملات الغذائية هي مواد تُضاف للنظام الغذائي لدعم الحاجة اليومية من فيتامينات أو معادن أو بروتينات — بجرعات مناسبة وبعد استشارة، خصوصاً إن كنت تتبع تمريناً أو تعافياً بعد إرهاق. في SHARK TEAM نربط اختيار المكمل بخطة واضحة: هدفك، وقت التناول، والتناغم مع أي وضع صحي — مع منتجات أصلية وطلب عبر واتساب يتضمن استشارة قبل الشراء.",
@@ -61,8 +61,8 @@ export const categories: Category[] = [
   },
   {
     slug: "weight-loss",
-    title: "إنقاص الوزن",
-    subtitle: "وزن أنسب • طاقة أوضح • خطة تمشي وياك يومياً",
+    title: "حوارق دهون",
+    subtitle: "أيض أنشط • طاقة أوضح • تنشيف منتظم",
     imageHint: "weight loss icon",
     introAr:
       "مسار إنقاص الوزن عندنا يجمع بين فهم طاقتك اليومية، النشاط، والالتزام الغذائي — وليس وصفات سريعة مبهمة. نقدّم خيارات دعم مدروسة ضمن خطّة يمكن متابعتها، مع استشارة لتحديد ما يناسب جسمك وتوقيتك. الطلب يبقى عبر واتساب مع توجيه قبل الشراء لضمان اختيار أنسب لمسارك.",
@@ -73,7 +73,7 @@ export const categories: Category[] = [
   },
   {
     slug: "hair-care",
-    title: "العناية بالشعر",
+    title: "منتجات الشعر",
     subtitle: "جذور أقوى • لمعان صحّي ومظهر أوضح",
     imageHint: "hair care icon",
     introAr:
@@ -85,7 +85,7 @@ export const categories: Category[] = [
   },
   {
     slug: "dental",
-    title: "العناية بالأسنان",
+    title: "منتجات الأسنان",
     subtitle: "ابتسامة أنظف • عناية يومية ومريحة",
     imageHint: "dental icon",
     introAr:
@@ -330,6 +330,10 @@ export function getCategoryBySlug(slug: string) {
 
 export function getProductsByCategory(slug: CategorySlug) {
   return products.filter((p) => p.category === slug);
+}
+
+export function getProductById(productId: string) {
+  return products.find((p) => p.id === productId);
 }
 
 export const seededReviews: Review[] = Array.from({ length: 52 }).map((_, i) => {

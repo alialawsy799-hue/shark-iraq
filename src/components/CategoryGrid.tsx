@@ -2,62 +2,64 @@
 
 import Link from "next/link";
 import { motion } from "framer-motion";
-import { ChevronLeft, Beaker, Flame, ShieldPlus, Sparkles } from "lucide-react";
+import { Beaker, Flame, ShieldPlus, Sparkles } from "lucide-react";
 import type { Category } from "@/lib/data";
 
 const iconsBySlug: Record<string, React.ReactNode> = {
-  supplements: <Beaker className="h-5 w-5" />,
-  "weight-loss": <Flame className="h-5 w-5" />,
-  "hair-care": <Sparkles className="h-5 w-5" />,
-  dental: <ShieldPlus className="h-5 w-5" />,
+  supplements: <Beaker className="h-7 w-7 sm:h-8 sm:w-8" />,
+  "weight-loss": <Flame className="h-7 w-7 sm:h-8 sm:w-8" />,
+  "hair-care": <Sparkles className="h-7 w-7 sm:h-8 sm:w-8" />,
+  dental: <ShieldPlus className="h-7 w-7 sm:h-8 sm:w-8" />,
 };
 
 export function ProductCategoriesGrid({ categories }: { categories: Category[] }) {
   return (
     <section className="py-14 sm:py-16">
-      <div className="shark-container max-w-xl sm:max-w-none">
-        <div>
+      <div className="shark-container">
+        <div className="text-center sm:text-start">
           <div className="text-xs font-extrabold tracking-[0.22em] text-brand">التصنيفات</div>
           <h2 className="mt-3 text-3xl font-extrabold tracking-tight text-white sm:text-4xl">
             اختر مسارك
           </h2>
-          <p className="mt-3 leading-7 text-white/70">
-            مكملات غذائية، إنقاص وزن، عناية بالشعر والأسنان — الطلب مع استشارة عبر واتساب قبل
-            الشراء.
+          <p className="mx-auto mt-3 max-w-2xl leading-7 text-white/70 sm:mx-0">
+            أربعة مسارات — اضغط على المربع لعرض منتجاته.
           </p>
         </div>
 
-        {/* عمودي بالكامل: بطاقة فوق بطاقة (لا تمرير أفقي) */}
-        <ul className="mt-8 flex list-none flex-col gap-4" role="list">
+        {/* شبكة 2×2 ثابتة على جميع المقاسات */}
+        <ul
+          className="mx-auto mt-8 grid w-full max-w-3xl list-none grid-cols-2 gap-3 sm:gap-5 lg:gap-6"
+          role="list"
+        >
           {categories.map((c, idx) => (
             <motion.li
               key={c.slug}
-              initial={{ opacity: 0, y: 12 }}
+              initial={{ opacity: 0, y: 10 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true, margin: "-40px" }}
-              transition={{ duration: 0.45, delay: idx * 0.06 }}
+              transition={{ duration: 0.45, delay: idx * 0.05 }}
             >
               <Link
                 href={`/category/${c.slug}`}
                 className={[
-                  "group shark-card flex w-full flex-col rounded-3xl px-5 py-5 sm:px-6 sm:py-6",
-                  "transition hover:border-brand/45 hover:shadow-[0_0_40px_rgba(30,111,217,0.16)] active:scale-[0.995]",
+                  "group shark-card relative flex aspect-square w-full flex-col items-center justify-center rounded-3xl p-4 text-center sm:p-6",
+                  "transition hover:border-brand/45 hover:shadow-[0_0_40px_rgba(30,111,217,0.18)] active:scale-[0.985]",
                 ].join(" ")}
               >
-                <div className="flex flex-row-reverse items-start justify-between gap-4">
-                  <div className="inline-flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl border border-brand/30 bg-brand/10 text-brand transition group-hover:border-brand/50 group-hover:bg-brand/[0.14]">
-                    {iconsBySlug[c.slug] ?? <Sparkles className="h-5 w-5" />}
-                  </div>
-                  <div className="min-w-0 flex-1 text-end">
-                    <div className="text-lg font-bold text-white sm:text-xl">{c.title}</div>
-                    <div className="mt-2 text-sm leading-relaxed text-white/70">{c.subtitle}</div>
-                  </div>
+                <div
+                  className="pointer-events-none absolute inset-0 rounded-3xl bg-[radial-gradient(ellipse_70%_60%_at_50%_25%,rgba(30,111,217,0.16),transparent_70%)] opacity-80 transition group-hover:opacity-100"
+                  aria-hidden
+                />
+
+                <div className="relative inline-flex h-14 w-14 items-center justify-center rounded-2xl border border-brand/30 bg-brand/10 text-brand shadow-[0_0_24px_rgba(30,111,217,0.18)] transition group-hover:border-brand/55 group-hover:bg-brand/[0.16] sm:h-16 sm:w-16">
+                  {iconsBySlug[c.slug] ?? <Sparkles className="h-7 w-7" />}
                 </div>
-                <div className="mt-5 flex items-center justify-between gap-3 border-t border-white/10 pt-4">
-                  <span className="text-[11px] font-extrabold tracking-[0.22em] text-brand/85">
-                    عرض التفاصيل
-                  </span>
-                  <ChevronLeft className="h-5 w-5 shrink-0 text-brand/75 transition group-hover:-translate-x-0.5" />
+
+                <div className="relative mt-3 text-base font-extrabold leading-tight text-white sm:mt-4 sm:text-xl">
+                  {c.title}
+                </div>
+                <div className="relative mt-1.5 line-clamp-2 text-[11px] leading-relaxed text-white/60 sm:text-xs">
+                  {c.subtitle}
                 </div>
               </Link>
             </motion.li>

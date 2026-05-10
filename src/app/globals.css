@@ -44,6 +44,31 @@ body {
   color: var(--foreground);
 }
 
+/* نبض اللوكو أثناء تحميل بطاقات الفيديو */
+@keyframes shark-logo-pulse {
+  0%,
+  100% {
+    transform: scale(0.92);
+    opacity: 0.55;
+  }
+  50% {
+    transform: scale(1.08);
+    opacity: 1;
+  }
+}
+
+.shark-logo-pulse {
+  animation: shark-logo-pulse 1.4s ease-in-out infinite;
+  will-change: transform, opacity;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .shark-logo-pulse {
+    animation: none;
+    opacity: 0.85;
+  }
+}
+
 /* ماركيه: طبقة منفصلة + بدون transform ثابت يتعارض مع الأنيميشن — يقلّل التقطيع مع الكثير من الـ iframes */
 .shark-marquee-viewport {
   overflow: hidden;

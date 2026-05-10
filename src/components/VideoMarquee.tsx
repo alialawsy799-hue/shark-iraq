@@ -12,8 +12,8 @@ import { defaultMarqueeVideos } from "@/lib/video-marquee";
 
 export type MarqueeVideo = { id: string; vimeoId: string; title: string };
 
-/** نسقان من قائمة الفيديو (بدل 4) = أقل iframes وأسلاسة أفضل على الجهاز */
-const LOOP_COPIES = 2;
+/** الحد الأدنى لعدد البطاقات في كل شريط — يضمن استمرار الحلقة حتى لو كان عدد الفيديوهات قليلاً */
+const MIN_SLOTS_PER_STRIP = 12;
 
 type StripProps = {
   videos: MarqueeVideo[];
@@ -30,7 +30,13 @@ function VideoMarqueeStrip({
 }: StripProps) {
   const slots = useMemo(() => {
     const out: { slotKey: string; video: MarqueeVideo }[] = [];
-    for (let c = 0; c < LOOP_COPIES; c++) {
+    if (videos.length === 0) return out;
+    /** عند توفر فيديوهات كافية لعرض شريط مستمر، لا حاجة للتكرار الداخلي */
+    const copies =
+      videos.length >= MIN_SLOTS_PER_STRIP
+        ? 1
+        : Math.ceil(MIN_SLOTS_PER_STRIP / videos.length);
+    for (let c = 0; c < copies; c++) {
       videos.forEach((v, idx) => {
         out.push({
           slotKey: `${v.id}-${c}-${idx}`,
@@ -86,16 +92,25 @@ type DualProps = {
 };
 
 export function DualVideoMarquees({ videos = defaultMarqueeVideos }: DualProps) {
+  /**
+   * عند توفر فيديوهات وافرة (≥ ضِعف الحد الأدنى) نقسم القائمة على الشريطين
+   * لتقليل عدد الـ iframes في كل شريط — وإلّا نُمرّر القائمة كاملة لكليهما
+   * حتى تبقى الحلقة مكتنزة بصرياً.
+   */
+  const split = videos.length >= MIN_SLOTS_PER_STRIP * 2;
+  const topVideos = split ? videos.filter((_, i) => i % 2 === 0) : videos;
+  const bottomVideos = split ? videos.filter((_, i) => i % 2 === 1) : videos;
+
   return (
     <section dir="ltr" className="space-y-4 sm:space-y-6">
       <VideoMarqueeStrip
-        videos={videos}
+        videos={topVideos}
         speedSeconds={165}
         initialOffsetFrac={0}
         visualFlow="rightToLeft"
       />
       <VideoMarqueeStrip
-        videos={videos}
+        videos={bottomVideos}
         speedSeconds={165}
         initialOffsetFrac={0.35}
         visualFlow="leftToRight"

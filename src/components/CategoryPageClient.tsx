@@ -1,9 +1,10 @@
 "use client";
 
 import Image from "next/image";
+import Link from "next/link";
 import { useMemo } from "react";
 import { motion } from "framer-motion";
-import { MessageCircle } from "lucide-react";
+import { ChevronLeft, MessageCircle } from "lucide-react";
 import type { Category, Product } from "@/lib/data";
 import { buildWhatsappOrderMessage, buildWhatsappUrl } from "@/lib/site";
 import { site } from "@/lib/site";
@@ -229,24 +230,34 @@ export function CategoryPageClient({
           >
             {displayProducts.map((p) => (
               <li key={p.id}>
-                <article className="shark-card flex h-full flex-col overflow-hidden rounded-3xl p-4 sm:p-5">
-                  <div className="relative aspect-square w-full overflow-hidden rounded-2xl border border-white/10 bg-[#f8f9fb]">
-                    <Image
-                      src={p.image}
-                      alt={p.name}
-                      fill
-                      className="object-contain p-3"
-                      sizes="(max-width:640px) 100vw, 25vw"
-                    />
-                  </div>
-                  <h3 className="mt-4 text-center text-sm font-bold leading-snug text-white sm:text-base">
-                    {p.name}
-                  </h3>
-                  <p className="mt-2 text-center text-lg font-semibold tabular-nums">
-                    <span dir="ltr" lang="en" className="inline-block tracking-tight text-brand">
-                      {formatPriceIQDEn(p.priceIQD)} IQD
-                    </span>
-                  </p>
+                <article className="shark-card group flex h-full flex-col overflow-hidden rounded-3xl p-4 transition hover:border-brand/45 hover:shadow-[0_0_40px_rgba(30,111,217,0.16)] sm:p-5">
+                  <Link
+                    href={`/category/${category.slug}/${p.id}`}
+                    aria-label={`فتح صفحة ${p.name}`}
+                    className="block focus:outline-none focus-visible:ring-2 focus-visible:ring-brand/55 rounded-2xl"
+                  >
+                    <div className="relative aspect-square w-full overflow-hidden rounded-2xl border border-white/10 bg-[#f8f9fb]">
+                      <Image
+                        src={p.image}
+                        alt={p.name}
+                        fill
+                        className="object-contain p-3 transition duration-300 group-hover:scale-[1.02]"
+                        sizes="(max-width:640px) 100vw, 25vw"
+                      />
+                    </div>
+                    <h3 className="mt-4 text-center text-sm font-bold leading-snug text-white sm:text-base">
+                      {p.name}
+                    </h3>
+                    <p className="mt-2 text-center text-lg font-semibold tabular-nums">
+                      <span dir="ltr" lang="en" className="inline-block tracking-tight text-brand">
+                        {formatPriceIQDEn(p.priceIQD)} IQD
+                      </span>
+                    </p>
+                    <div className="mt-3 flex items-center justify-center gap-1.5 text-[11px] font-extrabold tracking-[0.18em] text-brand/85">
+                      <span>عرض المنتج</span>
+                      <ChevronLeft className="h-3.5 w-3.5 transition group-hover:-translate-x-0.5" />
+                    </div>
+                  </Link>
                   <div className="mt-4">
                     <ProductOrderLink productName={p.name} />
                   </div>

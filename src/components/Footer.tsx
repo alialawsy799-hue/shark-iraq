@@ -24,28 +24,51 @@ export function Footer() {
                 href={whatsappHref}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center gap-3 rounded-xl border border-white/10 bg-white/5 px-4 py-3 text-white/85 hover:border-brand/45 hover:bg-brand/10 transition"
+                className={[
+                  "inline-flex items-center gap-3 rounded-xl border px-4 py-3 transition",
+                  "border-[#25D366]/45 bg-[#25D366]/12 text-white shadow-[0_0_24px_rgba(37,211,102,0.12)]",
+                  "hover:border-[#25D366]/70 hover:bg-[#25D366]/20 hover:shadow-[0_0_28px_rgba(37,211,102,0.22)]",
+                ].join(" ")}
               >
-                <MessageCircle className="h-5 w-5" />
+                <span className="grid h-10 w-10 shrink-0 place-items-center rounded-lg bg-[#25D366]/20 text-[#25D366] ring-1 ring-[#25D366]/35">
+                  <MessageCircle className="h-5 w-5" aria-hidden />
+                </span>
                 <span className="text-sm font-semibold">واتساب</span>
-                <span className="ms-auto text-xs text-white/55">طلب واستشارة سريعة</span>
+                <span className="ms-auto text-xs text-white/70">طلب واستشارة سريعة</span>
               </a>
               <a
                 href={site.telegram}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center gap-3 rounded-xl border border-white/10 bg-white/5 px-4 py-3 text-white/85 hover:border-brand/45 hover:bg-brand/10 transition"
+                className={[
+                  "inline-flex items-center gap-3 rounded-xl border px-4 py-3 transition",
+                  "border-[#229ED9]/45 bg-[#229ED9]/12 text-white shadow-[0_0_24px_rgba(34,158,217,0.12)]",
+                  "hover:border-[#229ED9]/70 hover:bg-[#229ED9]/20 hover:shadow-[0_0_28px_rgba(34,158,217,0.22)]",
+                ].join(" ")}
               >
-                <Send className="h-5 w-5" />
+                <span className="grid h-10 w-10 shrink-0 place-items-center rounded-lg bg-[#229ED9]/20 text-[#229ED9] ring-1 ring-[#229ED9]/35">
+                  <Send className="h-5 w-5" aria-hidden />
+                </span>
                 <span className="text-sm font-semibold">تيليغرام</span>
               </a>
               <a
                 href={site.instagram}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center gap-3 rounded-xl border border-white/10 bg-white/5 px-4 py-3 text-white/85 hover:border-brand/45 hover:bg-brand/10 transition"
+                className={[
+                  "inline-flex items-center gap-3 rounded-xl border px-4 py-3 transition",
+                  "border-fuchsia-500/35 bg-gradient-to-br from-[#f58529]/14 via-[#dd2a7b]/14 to-[#8134af]/14 text-white",
+                  "shadow-[0_0_24px_rgba(221,42,123,0.1)]",
+                  "hover:border-fuchsia-400/50 hover:from-[#f58529]/22 hover:via-[#dd2a7b]/22 hover:to-[#8134af]/22",
+                  "hover:shadow-[0_0_28px_rgba(129,52,175,0.18)]",
+                ].join(" ")}
               >
-                <Camera className="h-5 w-5" />
+                <span
+                  className="grid h-10 w-10 shrink-0 place-items-center rounded-lg bg-gradient-to-br from-[#f58529]/25 via-[#dd2a7b]/25 to-[#8134af]/25 text-white ring-1 ring-white/20"
+                  aria-hidden
+                >
+                  <Camera className="h-5 w-5" />
+                </span>
                 <span className="text-sm font-semibold">إنستغرام</span>
               </a>
             </div>

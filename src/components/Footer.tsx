@@ -1,6 +1,5 @@
 import { site } from "@/lib/site";
-import { MessageCircle, Send } from "lucide-react";
-import { InstagramGlyph } from "./BrandIcons";
+import { InstagramGlyph, TelegramGlyph, WhatsAppGlyph } from "./BrandIcons";
 
 export function Footer() {
   const whatsappHref = `https://wa.me/${site.whatsappNumberE164.replace(/[^\d]/g, "")}`;
@@ -31,8 +30,8 @@ export function Footer() {
                   "hover:border-[#25D366]/70 hover:bg-[#25D366]/20 hover:shadow-[0_0_28px_rgba(37,211,102,0.22)]",
                 ].join(" ")}
               >
-                <span className="grid h-10 w-10 shrink-0 place-items-center rounded-lg bg-[#25D366]/20 text-[#25D366] ring-1 ring-[#25D366]/35">
-                  <MessageCircle className="h-5 w-5" aria-hidden />
+                <span className="grid h-10 w-10 shrink-0 place-items-center rounded-lg bg-[#25D366] text-white ring-1 ring-[#25D366]/55 shadow-[0_0_18px_rgba(37,211,102,0.45)]">
+                  <WhatsAppGlyph className="h-5 w-5" />
                 </span>
                 <span className="text-sm font-semibold">واتساب</span>
                 <span className="ms-auto text-xs text-white/70">طلب واستشارة سريعة</span>
@@ -47,8 +46,8 @@ export function Footer() {
                   "hover:border-[#229ED9]/70 hover:bg-[#229ED9]/20 hover:shadow-[0_0_28px_rgba(34,158,217,0.22)]",
                 ].join(" ")}
               >
-                <span className="grid h-10 w-10 shrink-0 place-items-center rounded-lg bg-[#229ED9]/20 text-[#229ED9] ring-1 ring-[#229ED9]/35">
-                  <Send className="h-5 w-5" aria-hidden />
+                <span className="grid h-10 w-10 shrink-0 place-items-center rounded-lg bg-[#229ED9] text-white ring-1 ring-[#229ED9]/55 shadow-[0_0_18px_rgba(34,158,217,0.45)]">
+                  <TelegramGlyph className="h-5 w-5" />
                 </span>
                 <span className="text-sm font-semibold">تيليغرام</span>
               </a>

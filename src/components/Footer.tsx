@@ -1,5 +1,6 @@
 import { site } from "@/lib/site";
-import { Camera, MessageCircle, Send } from "lucide-react";
+import { MessageCircle, Send } from "lucide-react";
+import { InstagramGlyph } from "./BrandIcons";
 
 export function Footer() {
   const whatsappHref = `https://wa.me/${site.whatsappNumberE164.replace(/[^\d]/g, "")}`;
@@ -64,10 +65,10 @@ export function Footer() {
                 ].join(" ")}
               >
                 <span
-                  className="grid h-10 w-10 shrink-0 place-items-center rounded-lg bg-gradient-to-br from-[#f58529]/25 via-[#dd2a7b]/25 to-[#8134af]/25 text-white ring-1 ring-white/20"
+                  className="grid h-10 w-10 shrink-0 place-items-center rounded-lg bg-gradient-to-br from-[#f58529] via-[#dd2a7b] to-[#8134af] text-white ring-1 ring-white/25 shadow-[0_0_18px_rgba(221,42,123,0.35)]"
                   aria-hidden
                 >
-                  <Camera className="h-5 w-5" />
+                  <InstagramGlyph className="h-5 w-5" />
                 </span>
                 <span className="text-sm font-semibold">إنستغرام</span>
               </a>

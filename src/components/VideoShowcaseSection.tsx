@@ -19,7 +19,8 @@ export function VideoShowcaseSection() {
           dir="rtl"
           className="mx-auto mt-2 max-w-xl text-center text-sm text-white/55"
         >
-          شريطان يتحركان باستمرار — اضغط «صامت» أو «صوت» على أي لقطة للاستماع دون إيقاف الحركة.
+          فيديوهات من ثقة المستخدمين — لقطات حقيقية من التجربة والمتابعة مع SHARK TEAM، تعكس الشفافية
+          والالتزام بالجودة قبل أن تختار. يمكنك تشغيل الصوت على أي مقطع عبر زر «صوت» عند الحاجة.
         </p>
       </div>
       <div className="shark-container mt-8 min-w-0 max-w-5xl">

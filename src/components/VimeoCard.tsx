@@ -67,7 +67,7 @@ export function VimeoCard({ slotKey, vimeoId, title }: Props) {
       playerRef.current?.destroy().catch(() => {});
       playerRef.current = null;
     };
-  }, []);
+  }, [vimeoId]);
 
   useEffect(() => {
     const p = playerRef.current;
@@ -107,11 +107,12 @@ export function VimeoCard({ slotKey, vimeoId, title }: Props) {
         ref={iframeRef}
         id={`vimeo-${stableId}-${slotKey}`}
         src={src}
-        loading="lazy"
-        className="absolute inset-0 h-full w-full"
-        allow="autoplay; fullscreen; picture-in-picture; encrypted-media"
+        className="absolute inset-0 h-full w-full border-0 [transform:translateZ(0)]"
+        allow="autoplay; fullscreen; picture-in-picture; encrypted-media; web-share"
         allowFullScreen
+        referrerPolicy="strict-origin-when-cross-origin"
         title={title}
+        onLoad={() => setPlaying(true)}
       />
 
       {!playing && (

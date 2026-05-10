@@ -2,24 +2,33 @@
 
 /**
  * ماركيه CSS (translate3d) لسلاسة أفضل من Framer على مسار طويل.
- * الحركة لا تتوقف عند تشغيل الصوت — الكتم داخل كل بطاقة فقط.
+ * على الهاتف: شريط واحد + عدد أقل من الفيديوهات لتجنّب خنق Safari لعدد كبير من iframes.
  */
 
-import { useMemo } from "react";
+import { useEffect, useMemo, useState } from "react";
 import type { CSSProperties } from "react";
 import { VimeoCard } from "./VimeoCard";
 import { defaultMarqueeVideos } from "@/lib/video-marquee";
 
 export type MarqueeVideo = { id: string; vimeoId: string; title: string };
 
-/** الحد الأدنى لعدد البطاقات في كل شريط — يضمن استمرار الحلقة حتى لو كان عدد الفيديوهات قليلاً */
-const MIN_SLOTS_PER_STRIP = 12;
+const DESKTOP_MIN_SLOTS = 12;
+const MOBILE_MIN_SLOTS = 8;
+const MOBILE_MAX_UNIQUE = 8;
+
+function pickMobileSubset(videos: MarqueeVideo[]): MarqueeVideo[] {
+  if (videos.length <= MOBILE_MAX_UNIQUE) return videos;
+  const step = Math.ceil(videos.length / MOBILE_MAX_UNIQUE);
+  return videos.filter((_, i) => i % step === 0).slice(0, MOBILE_MAX_UNIQUE);
+}
 
 type StripProps = {
   videos: MarqueeVideo[];
   speedSeconds?: number;
   initialOffsetFrac?: number;
   visualFlow?: "rightToLeft" | "leftToRight";
+  /** أقل عدد بطاقات قبل تكرار القائمة داخل الشريط */
+  minSlotsPerStrip?: number;
 };
 
 function VideoMarqueeStrip({
@@ -27,15 +36,15 @@ function VideoMarqueeStrip({
   speedSeconds = 150,
   initialOffsetFrac = 0,
   visualFlow = "rightToLeft",
+  minSlotsPerStrip = DESKTOP_MIN_SLOTS,
 }: StripProps) {
   const slots = useMemo(() => {
     const out: { slotKey: string; video: MarqueeVideo }[] = [];
     if (videos.length === 0) return out;
-    /** عند توفر فيديوهات كافية لعرض شريط مستمر، لا حاجة للتكرار الداخلي */
     const copies =
-      videos.length >= MIN_SLOTS_PER_STRIP
+      videos.length >= minSlotsPerStrip
         ? 1
-        : Math.ceil(MIN_SLOTS_PER_STRIP / videos.length);
+        : Math.ceil(minSlotsPerStrip / videos.length);
     for (let c = 0; c < copies; c++) {
       videos.forEach((v, idx) => {
         out.push({
@@ -45,12 +54,11 @@ function VideoMarqueeStrip({
       });
     }
     return out;
-  }, [videos]);
+  }, [videos, minSlotsPerStrip]);
 
   /** نسختان متطابقتان لحلقة لا نهائية بـ translateX(-50%) */
   const trackItems = useMemo(() => [...slots, ...slots], [slots]);
 
-  /** دورة أطول ≈ ٣–٤ دقائق — عدّل speedSeconds للإبطاء أو التسريع */
   const durationSec = Math.max(speedSeconds, 90 + videos.length * 6) * 1.25;
   const delaySec = -initialOffsetFrac * durationSec;
   const reverse = visualFlow === "leftToRight";
@@ -92,12 +100,46 @@ type DualProps = {
 };
 
 export function DualVideoMarquees({ videos = defaultMarqueeVideos }: DualProps) {
-  /**
-   * عند توفر فيديوهات وافرة (≥ ضِعف الحد الأدنى) نقسم القائمة على الشريطين
-   * لتقليل عدد الـ iframes في كل شريط — وإلّا نُمرّر القائمة كاملة لكليهما
-   * حتى تبقى الحلقة مكتنزة بصرياً.
-   */
-  const split = videos.length >= MIN_SLOTS_PER_STRIP * 2;
+  /** null = لم نعرف بعد (تجنّب تكديس iframes على الهاتف قبل الجلسة) */
+  const [layout, setLayout] = useState<"pending" | "narrow" | "wide">("pending");
+
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    const mq = window.matchMedia("(max-width: 768px)");
+    const apply = () => setLayout(mq.matches ? "narrow" : "wide");
+    apply();
+    mq.addEventListener("change", apply);
+    return () => mq.removeEventListener("change", apply);
+  }, []);
+
+  const mobilePool = useMemo(() => pickMobileSubset(videos), [videos]);
+
+  if (layout === "pending") {
+    return (
+      <section
+        dir="ltr"
+        aria-hidden
+        className="min-h-[15rem] rounded-2xl bg-black/25 ring-1 ring-white/10 sm:min-h-[16rem]"
+      />
+    );
+  }
+
+  /** هاتف: شريط واحد + فيديوهات أقل = أقل iframes نشطة (Safari يخنق الكثرة) */
+  if (layout === "narrow") {
+    return (
+      <section dir="ltr" className="space-y-4 sm:space-y-6">
+        <VideoMarqueeStrip
+          videos={mobilePool}
+          speedSeconds={200}
+          initialOffsetFrac={0}
+          visualFlow="rightToLeft"
+          minSlotsPerStrip={MOBILE_MIN_SLOTS}
+        />
+      </section>
+    );
+  }
+
+  const split = videos.length >= DESKTOP_MIN_SLOTS * 2;
   const topVideos = split ? videos.filter((_, i) => i % 2 === 0) : videos;
   const bottomVideos = split ? videos.filter((_, i) => i % 2 === 1) : videos;
 
@@ -108,12 +150,14 @@ export function DualVideoMarquees({ videos = defaultMarqueeVideos }: DualProps) 
         speedSeconds={165}
         initialOffsetFrac={0}
         visualFlow="rightToLeft"
+        minSlotsPerStrip={DESKTOP_MIN_SLOTS}
       />
       <VideoMarqueeStrip
         videos={bottomVideos}
         speedSeconds={165}
         initialOffsetFrac={0.35}
         visualFlow="leftToRight"
+        minSlotsPerStrip={DESKTOP_MIN_SLOTS}
       />
     </section>
   );

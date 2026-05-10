@@ -13,15 +13,12 @@ type Props = {
 
 /** بطاقة فيميو: الكتم محلي حتى لا يُعاد رسم الشريط كاملاً ولا يتوقف الماركيه */
 export function VimeoCard({ slotKey, vimeoId, title }: Props) {
-  const containerRef = useRef<HTMLDivElement | null>(null);
   const iframeRef = useRef<HTMLIFrameElement | null>(null);
   const playerRef = useRef<Player | null>(null);
   /** false = صوت يعمل، true = صامت (افتراضياً صامت لتسمح المتصفحات بالتشغيل التلقائي) */
   const [muted, setMuted] = useState(true);
   /** يصير true عند بدء فعلي للتشغيل — نُخفي عندها لوكو النبض */
   const [playing, setPlaying] = useState(false);
-  /** تحميل كسول للـ iframe: نركّبه فقط عند اقتراب البطاقة من شاشة العرض */
-  const [shouldMount, setShouldMount] = useState(false);
   const stableId = useId();
 
   const src = useMemo(() => {
@@ -37,43 +34,12 @@ export function VimeoCard({ slotKey, vimeoId, title }: Props) {
       portrait: "0",
       playsinline: "1",
       controls: "0",
+      dnt: "1",
     });
     return `${base}?${params.toString()}`;
   }, [vimeoId]);
 
-  /** نراقب اقتراب البطاقة من المنفذ المرئي ونركّب الـ iframe وقتها فقط */
   useEffect(() => {
-    if (shouldMount) return;
-    const el = containerRef.current;
-    if (!el) return;
-
-    if (typeof IntersectionObserver === "undefined") {
-      setShouldMount(true);
-      return;
-    }
-
-    const observer = new IntersectionObserver(
-      (entries) => {
-        for (const entry of entries) {
-          if (entry.isIntersecting) {
-            setShouldMount(true);
-            observer.disconnect();
-            break;
-          }
-        }
-      },
-      {
-        // نبدأ التحميل قبل أن تدخل البطاقة الشاشة لتقليل الانتظار البصري
-        rootMargin: "300px 200px",
-        threshold: 0.01,
-      }
-    );
-    observer.observe(el);
-    return () => observer.disconnect();
-  }, [shouldMount]);
-
-  useEffect(() => {
-    if (!shouldMount) return;
     if (!iframeRef.current) return;
     const p = new Player(iframeRef.current);
     playerRef.current = p;
@@ -81,9 +47,11 @@ export function VimeoCard({ slotKey, vimeoId, title }: Props) {
     const handlePlaying = () => setPlaying(true);
     p.on("playing", handlePlaying);
     p.on("play", handlePlaying);
+    p.on("loaded", handlePlaying);
 
     (async () => {
       try {
+        await p.ready();
         await p.setVolume(0);
         await p.setMuted(true);
         await p.play();
@@ -95,10 +63,11 @@ export function VimeoCard({ slotKey, vimeoId, title }: Props) {
     return () => {
       p.off("playing", handlePlaying);
       p.off("play", handlePlaying);
+      p.off("loaded", handlePlaying);
       playerRef.current?.destroy().catch(() => {});
       playerRef.current = null;
     };
-  }, [shouldMount]);
+  }, []);
 
   useEffect(() => {
     const p = playerRef.current;
@@ -121,7 +90,6 @@ export function VimeoCard({ slotKey, vimeoId, title }: Props) {
 
   return (
     <div
-      ref={containerRef}
       className={[
         "relative shrink-0 overflow-hidden rounded-2xl border",
         "border-white/10 bg-black shadow-[0_0_0_1px_rgba(30,111,217,0.15)]",
@@ -135,16 +103,16 @@ export function VimeoCard({ slotKey, vimeoId, title }: Props) {
       data-slot={slotKey}
       aria-label={title}
     >
-      {shouldMount && (
-        <iframe
-          ref={iframeRef}
-          id={`vimeo-${stableId}-${slotKey}`}
-          src={src}
-          className="absolute inset-0 h-full w-full"
-          allow="autoplay; fullscreen; picture-in-picture"
-          title={title}
-        />
-      )}
+      <iframe
+        ref={iframeRef}
+        id={`vimeo-${stableId}-${slotKey}`}
+        src={src}
+        loading="lazy"
+        className="absolute inset-0 h-full w-full"
+        allow="autoplay; fullscreen; picture-in-picture; encrypted-media"
+        allowFullScreen
+        title={title}
+      />
 
       {!playing && (
         <div

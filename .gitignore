@@ -20,6 +20,9 @@
 # production
 /build
 
+# nested duplicate clone (dev convenience — not part of this repo)
+/shark-iraq/
+
 # misc
 .DS_Store
 *.pem

@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Tajawal } from "next/font/google";
 import "./globals.css";
 import { site } from "@/lib/site";
+import { SiteTopTabs } from "@/components/SiteTopTabs";
 
 const brandSans = Tajawal({
   variable: "--font-brand",
@@ -27,6 +28,7 @@ export default function RootLayout({
       className={`${brandSans.variable} h-full overflow-x-clip font-sans antialiased`}
     >
       <body className="shark-theme flex min-h-full min-w-0 flex-col overflow-x-clip bg-black pb-[max(0.5rem,env(safe-area-inset-bottom))] text-white font-sans">
+        <SiteTopTabs />
         {children}
       </body>
     </html>

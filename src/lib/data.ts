@@ -413,6 +413,10 @@ export function getProductsByCategory(slug: CategorySlug) {
   return products.filter((p) => p.category === slug);
 }
 
+export function getProductById(productId: string) {
+  return products.find((p) => p.id === productId);
+}
+
 export const seededReviews: Review[] = Array.from({ length: 52 }).map((_, i) => {
   const names = [
     "علي",

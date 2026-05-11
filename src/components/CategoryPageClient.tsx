@@ -2,14 +2,19 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { useMemo } from "react";
 import { motion } from "framer-motion";
-import { ChevronLeft, MessageCircle } from "lucide-react";
-import type { Category, Product } from "@/lib/data";
-import { buildWhatsappOrderMessage, buildWhatsappUrl } from "@/lib/site";
+import { Beaker, ChevronLeft, Flame, ShieldPlus, Sparkles } from "lucide-react";
+import type { Category, ProductLine } from "@/lib/data";
 import { site } from "@/lib/site";
 import { DualVideoMarquees } from "./VideoMarquee";
 import { SharkFeedbackSection } from "./Reviews";
+
+const lineCardIconByCategory: Record<string, React.ReactNode> = {
+  supplements: <Beaker className="h-7 w-7 sm:h-8 sm:w-8" />,
+  "weight-loss": <Flame className="h-7 w-7 sm:h-8 sm:w-8" />,
+  "hair-care": <Sparkles className="h-7 w-7 sm:h-8 sm:w-8" />,
+  dental: <ShieldPlus className="h-7 w-7 sm:h-8 sm:w-8" />,
+};
 
 /** يقسّم السطر الفرعي على • بأسلوب عرض أنظف */
 function CategorySubtitle({ text }: { text: string }) {
@@ -41,11 +46,6 @@ function CategorySubtitle({ text }: { text: string }) {
   );
 }
 
-/** أرقام إنجليزية + IQD للعرض */
-function formatPriceIQDEn(value: number) {
-  return new Intl.NumberFormat("en-US", { maximumFractionDigits: 0 }).format(value);
-}
-
 function VimeoLargeEmbed({ vimeoId, title }: { vimeoId: string; title: string }) {
   const src = `https://player.vimeo.com/video/${encodeURIComponent(
     vimeoId
@@ -64,30 +64,13 @@ function VimeoLargeEmbed({ vimeoId, title }: { vimeoId: string; title: string })
   );
 }
 
-function ProductOrderLink({ productName }: { productName: string }) {
-  const href = buildWhatsappUrl(buildWhatsappOrderMessage(productName));
-  return (
-    <a
-      href={href}
-      target="_blank"
-      rel="noopener noreferrer"
-      className="inline-flex w-full items-center justify-center gap-2 rounded-xl border border-brand/35 bg-brand/10 py-2.5 text-sm font-semibold text-white transition hover:border-brand/55 hover:bg-brand/18"
-    >
-      <MessageCircle className="h-4 w-4 shrink-0" />
-      اضغط للطلب
-    </a>
-  );
-}
-
 export function CategoryPageClient({
   category,
-  products,
+  lines,
 }: {
   category: Category;
-  products: Product[];
+  lines: ProductLine[];
 }) {
-  const displayProducts = useMemo(() => products.slice(0, 4), [products]);
-
   return (
     <main className="flex min-h-0 w-full min-w-0 flex-1 flex-col">
       {/* تعريف المسار — شعار + حركات + توهج */}
@@ -212,58 +195,59 @@ export function CategoryPageClient({
         </div>
       </section>
 
-      {/* أربعة منتجات */}
+      {/* ثلاثة خطوط منتج — مربعات مثل مسارات المكملات */}
       <section className="py-12 sm:py-16">
         <div className="shark-container">
           <div>
-            <p className="text-xs font-extrabold tracking-[0.22em] text-brand">منتجات المسار</p>
-            <h2 className="mt-3 text-2xl font-extrabold text-white sm:text-3xl">
-              اختر ما يناسبك
-            </h2>
+            <p className="text-xs font-extrabold tracking-[0.22em] text-brand">خطوط المنتج</p>
+            <h2 className="mt-3 text-2xl font-extrabold text-white sm:text-3xl">اختر خط المنتج</h2>
             <p dir="rtl" className="mt-3 max-w-2xl text-white/65">
-              أربعة خيارات مميزة لهذا التصنيف — الطلب عبر واتساب مع استشارة سريعة قبل الشراء.
+              ثلاثة خطوط لكل مسار — اضغط على المربع لعرض الأنواع وفيديو الشرح وآراء العملاء.
             </p>
           </div>
 
           <ul
-            className="mt-10 grid list-none grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4 lg:gap-6"
+            className="mx-auto mt-10 grid w-full max-w-3xl list-none grid-cols-1 gap-3 sm:grid-cols-3 sm:gap-5 lg:gap-6"
             role="list"
           >
-            {displayProducts.map((p) => (
-              <li key={p.id}>
-                <article className="shark-card group flex h-full flex-col overflow-hidden rounded-3xl p-4 transition hover:border-brand/45 hover:shadow-[0_0_40px_rgba(30,111,217,0.16)] sm:p-5">
-                  <Link
-                    href={`/category/${category.slug}/${p.id}`}
-                    aria-label={`فتح صفحة ${p.name}`}
-                    className="block focus:outline-none focus-visible:ring-2 focus-visible:ring-brand/55 rounded-2xl"
-                  >
-                    <div className="relative aspect-square w-full overflow-hidden rounded-2xl border border-white/10 bg-[#f8f9fb]">
-                      <Image
-                        src={p.image}
-                        alt={p.name}
-                        fill
-                        className="object-contain p-3 transition duration-300 group-hover:scale-[1.02]"
-                        sizes="(max-width:640px) 100vw, 25vw"
-                      />
-                    </div>
-                    <h3 className="mt-4 text-center text-sm font-bold leading-snug text-white sm:text-base">
-                      {p.name}
-                    </h3>
-                    <p className="mt-2 text-center text-lg font-semibold tabular-nums">
-                      <span dir="ltr" lang="en" className="inline-block tracking-tight text-brand">
-                        {formatPriceIQDEn(p.priceIQD)} IQD
-                      </span>
-                    </p>
-                    <div className="mt-3 flex items-center justify-center gap-1.5 text-[11px] font-extrabold tracking-[0.18em] text-brand/85">
-                      <span>عرض المنتج</span>
-                      <ChevronLeft className="h-3.5 w-3.5 transition group-hover:-translate-x-0.5" />
-                    </div>
-                  </Link>
-                  <div className="mt-4">
-                    <ProductOrderLink productName={p.name} />
+            {lines.map((line, idx) => (
+              <motion.li
+                key={line.id}
+                initial={{ opacity: 0, y: 10 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true, margin: "-40px" }}
+                transition={{ duration: 0.45, delay: idx * 0.06 }}
+              >
+                <Link
+                  href={`/category/${category.slug}/l/${line.id}`}
+                  aria-label={`فتح ${line.title}`}
+                  className={[
+                    "group shark-card relative flex aspect-square w-full flex-col items-center justify-center rounded-3xl p-4 text-center sm:p-6",
+                    "transition hover:border-brand/45 hover:shadow-[0_0_40px_rgba(30,111,217,0.18)] active:scale-[0.985]",
+                    "focus:outline-none focus-visible:ring-2 focus-visible:ring-brand/55",
+                  ].join(" ")}
+                >
+                  <div
+                    className="pointer-events-none absolute inset-0 rounded-3xl bg-[radial-gradient(ellipse_70%_60%_at_50%_25%,rgba(30,111,217,0.16),transparent_70%)] opacity-80 transition group-hover:opacity-100"
+                    aria-hidden
+                  />
+                  <div className="relative inline-flex h-14 w-14 items-center justify-center rounded-2xl border border-brand/30 bg-brand/10 text-brand shadow-[0_0_24px_rgba(30,111,217,0.18)] transition group-hover:border-brand/55 group-hover:bg-brand/[0.16] sm:h-16 sm:w-16">
+                    {lineCardIconByCategory[category.slug] ?? (
+                      <Sparkles className="h-7 w-7 sm:h-8 sm:w-8" />
+                    )}
                   </div>
-                </article>
-              </li>
+                  <div className="relative mt-3 text-base font-extrabold leading-tight text-white sm:mt-4 sm:text-xl">
+                    {line.title}
+                  </div>
+                  <div className="relative mt-1.5 line-clamp-2 text-[11px] leading-relaxed text-white/60 sm:text-xs">
+                    {line.subtitle}
+                  </div>
+                  <div className="relative mt-3 flex items-center justify-center gap-1.5 text-[11px] font-extrabold tracking-[0.18em] text-brand/85">
+                    <span>عرض التفاصيل</span>
+                    <ChevronLeft className="h-3.5 w-3.5 transition group-hover:-translate-x-0.5" />
+                  </div>
+                </Link>
+              </motion.li>
             ))}
           </ul>
         </div>

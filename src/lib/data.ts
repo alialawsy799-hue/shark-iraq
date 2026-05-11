@@ -29,12 +29,32 @@ export type Product = {
   howToUseVimeoId: string;
 };
 
+export type ProductLineVariant = {
+  id: string;
+  name: string;
+  note: string;
+  priceIQD: number;
+};
+
+export type ProductLine = {
+  id: string;
+  category: CategorySlug;
+  title: string;
+  subtitle: string;
+  explainerVimeoId: string;
+  explainerVideoTitleAr: string;
+  explainerVideoNameAr: string;
+  /** أنواع / أيتمات الخط */
+  variants: ProductLineVariant[];
+};
+
 export type Review = {
   id: string;
   name: string;
   comment: string;
   rating: 1 | 2 | 3 | 4 | 5;
 };
+
 
 /** عنوان الهيرو الرئيسي */
 export const heroHeadlineAr = "SHARK TEAM - القمة في التغذية والتدريب";
@@ -324,16 +344,73 @@ export const products: Product[] = [
   },
 ];
 
+const PRODUCT_LINE_SUFFIXES = ["a", "b", "c"] as const;
+
+/** عناوين الخطوط الثلاثة لكل تصنيف — تقدر تستبدلها لاحقاً من هنا */
+const productLineTitlesByCategory: Record<CategorySlug, [string, string, string]> = {
+  supplements: ["بروتين أ", "بروتين ب", "بروتين ج"],
+  "weight-loss": ["حارق دهون أ", "حارق دهون ب", "حارق دهون ج"],
+  "hair-care": ["منتج شعر أ", "منتج شعر ب", "منتج شعر ج"],
+  dental: ["عناية أسنان أ", "عناية أسنان ب", "عناية أسنان ج"],
+};
+
+function buildProductLines(): ProductLine[] {
+  const out: ProductLine[] = [];
+  for (const cat of categories) {
+    const titles = productLineTitlesByCategory[cat.slug];
+    PRODUCT_LINE_SUFFIXES.forEach((suffix, idx) => {
+      const title = titles[idx];
+      const base = `${cat.slug}-${suffix}`;
+      out.push({
+        id: base,
+        category: cat.slug,
+        title,
+        subtitle: `خط منتج ضمن «${cat.title}» — الأنواع أدناه قابلة للتعديل لاحقاً من ملف البيانات.`,
+        explainerVimeoId: PLACEHOLDER_VIMEO_ID,
+        explainerVideoTitleAr: `فيديو شرح — ${title}`,
+        explainerVideoNameAr: "لمحة عن الأنواع المتوفرة وكيفية الاختيار مع الاستشارة.",
+        variants: [
+          {
+            id: `${base}-v1`,
+            name: "النوع ١",
+            note: "وصف قصير للنوع — يُحدَّث لاحقاً حسب مخزونك الفعلي.",
+            priceIQD: 36000 + idx * 2000 + (suffix === "a" ? 0 : suffix === "b" ? 1500 : 3000),
+          },
+          {
+            id: `${base}-v2`,
+            name: "النوع ٢",
+            note: "يمكن ربطه بروتين مختلف أو تركيز آخر حسب خطتك.",
+            priceIQD: 39000 + idx * 2000,
+          },
+          {
+            id: `${base}-v3`,
+            name: "النوع ٣",
+            note: "خيار إضافي للمقارنة قبل الطلب عبر واتساب.",
+            priceIQD: 42000 + idx * 1500,
+          },
+        ],
+      });
+    });
+  }
+  return out;
+}
+
+export const productLines: ProductLine[] = buildProductLines();
+
+export function getProductLinesByCategory(slug: CategorySlug) {
+  return productLines.filter((l) => l.category === slug);
+}
+
+export function getProductLine(categorySlug: CategorySlug, lineId: string) {
+  return productLines.find((l) => l.category === categorySlug && l.id === lineId);
+}
+
 export function getCategoryBySlug(slug: string) {
   return categories.find((c) => c.slug === slug);
 }
 
 export function getProductsByCategory(slug: CategorySlug) {
   return products.filter((p) => p.category === slug);
-}
-
-export function getProductById(productId: string) {
-  return products.find((p) => p.id === productId);
 }
 
 export const seededReviews: Review[] = Array.from({ length: 52 }).map((_, i) => {

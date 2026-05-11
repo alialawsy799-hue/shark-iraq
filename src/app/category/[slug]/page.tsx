@@ -1,6 +1,6 @@
 import { notFound } from "next/navigation";
 import { CategoryPageClient } from "@/components/CategoryPageClient";
-import { getCategoryBySlug, getProductsByCategory, type CategorySlug } from "@/lib/data";
+import { getCategoryBySlug, getProductLinesByCategory, type CategorySlug } from "@/lib/data";
 import { Footer } from "@/components/Footer";
 
 export default async function CategoryPage({
@@ -12,14 +12,13 @@ export default async function CategoryPage({
   const category = getCategoryBySlug(slug);
   if (!category) return notFound();
 
-  const products = getProductsByCategory(category.slug as CategorySlug);
-  if (products.length === 0) return notFound();
+  const lines = getProductLinesByCategory(category.slug as CategorySlug);
+  if (lines.length === 0) return notFound();
 
   return (
     <>
-      <CategoryPageClient category={category} products={products} />
+      <CategoryPageClient category={category} lines={lines} />
       <Footer />
     </>
   );
 }
-

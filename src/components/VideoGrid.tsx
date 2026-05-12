@@ -1,8 +1,9 @@
 "use client";
 
 import Image from "next/image";
-import { motion } from "framer-motion";
-import { useMemo, useState } from "react";
+import { AnimatePresence, motion } from "framer-motion";
+import { X } from "lucide-react";
+import { useEffect, useMemo, useState } from "react";
 import type { MarqueeClip } from "@/lib/video-marquee";
 import { defaultMarqueeVideos } from "@/lib/video-marquee";
 
@@ -55,7 +56,7 @@ export function VideoGrid({
   videos = defaultMarqueeVideos,
   targetRows,
 }: Props) {
-  const [activeId, setActiveId] = useState<string | null>(null);
+  const [activeClip, setActiveClip] = useState<MarqueeClip | null>(null);
   const displayVideos = useMemo(
     () => (targetRows ? expandToTargetRows(videos, targetRows) : videos),
     [videos, targetRows]
@@ -63,88 +64,148 @@ export function VideoGrid({
   const rows = chunkAlternating(displayVideos);
 
   return (
-    <div className="space-y-1.5 sm:space-y-3 lg:space-y-4">
-      {rows.map((row, rowIdx) => {
-        const isOffsetRow = row.length === 4;
-        return (
-          <ul
-            key={`row-${rowIdx}`}
-            role="list"
-            className="grid grid-cols-10 gap-1.5 sm:gap-3 lg:gap-4"
-          >
-            {row.map((clip, idx) => (
-              <motion.li
-                key={clip.id}
-                initial={{ opacity: 0, y: 12 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true, margin: "-60px" }}
-                transition={{ duration: 0.35, delay: Math.min(idx * 0.015, 0.2) }}
-                className={[
-                  "col-span-2 min-w-0",
-                  isOffsetRow && idx === 0 ? "col-start-2" : "",
-                ].join(" ")}
-              >
-                <VideoTile
-                  clip={clip}
-                  isActive={activeId === clip.id}
-                  onPlay={() => setActiveId(clip.id)}
-                />
-              </motion.li>
-            ))}
-          </ul>
-        );
-      })}
-    </div>
+    <>
+      <div className="space-y-1.5 sm:space-y-3 lg:space-y-4">
+        {rows.map((row, rowIdx) => {
+          const isOffsetRow = row.length === 4;
+          return (
+            <ul
+              key={`row-${rowIdx}`}
+              role="list"
+              className="grid grid-cols-10 gap-1.5 sm:gap-3 lg:gap-4"
+            >
+              {row.map((clip, idx) => (
+                <motion.li
+                  key={clip.id}
+                  initial={{ opacity: 0, y: 12 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true, margin: "-60px" }}
+                  transition={{
+                    duration: 0.35,
+                    delay: Math.min(idx * 0.015, 0.2),
+                  }}
+                  className={[
+                    "col-span-2 min-w-0",
+                    isOffsetRow && idx === 0 ? "col-start-2" : "",
+                  ].join(" ")}
+                >
+                  <VideoTile clip={clip} onOpen={() => setActiveClip(clip)} />
+                </motion.li>
+              ))}
+            </ul>
+          );
+        })}
+      </div>
+
+      <VideoLightbox clip={activeClip} onClose={() => setActiveClip(null)} />
+    </>
   );
 }
 
 function VideoTile({
   clip,
-  isActive,
-  onPlay,
+  onOpen,
 }: {
   clip: MarqueeClip;
-  isActive: boolean;
-  onPlay: () => void;
+  onOpen: () => void;
 }) {
   const thumbUrl = `https://vumbnail.com/${clip.vimeoId}.jpg`;
-  const playerSrc = `https://player.vimeo.com/video/${encodeURIComponent(
-    clip.vimeoId
-  )}?autoplay=1&playsinline=1&title=0&byline=0&portrait=0&dnt=1`;
 
   return (
-    <div className="group relative aspect-[9/16] overflow-hidden rounded-xl border border-white/10 bg-black shadow-[0_0_0_1px_rgba(30,111,217,0.18)] sm:rounded-2xl">
-      {isActive ? (
-        <iframe
-          src={playerSrc}
-          className="absolute inset-0 h-full w-full border-0"
-          allow="autoplay; fullscreen; picture-in-picture; encrypted-media; web-share"
-          allowFullScreen
-          referrerPolicy="strict-origin-when-cross-origin"
-          title={clip.title}
-        />
-      ) : (
-        <button
-          type="button"
-          onClick={onPlay}
-          aria-label={`تشغيل ${clip.title}`}
-          className="absolute inset-0 block focus:outline-none focus-visible:ring-2 focus-visible:ring-brand/60"
+    <button
+      type="button"
+      onClick={onOpen}
+      aria-label={`فتح ${clip.title}`}
+      className="group relative block aspect-[9/16] w-full overflow-hidden rounded-xl border border-white/10 bg-black shadow-[0_0_0_1px_rgba(30,111,217,0.18)] focus:outline-none focus-visible:ring-2 focus-visible:ring-brand/60 sm:rounded-2xl"
+    >
+      <Image
+        src={thumbUrl}
+        alt={clip.title}
+        fill
+        sizes="(max-width:640px) 20vw, (max-width:1024px) 20vw, 200px"
+        className="object-cover transition group-hover:scale-[1.03]"
+        unoptimized
+        loading="lazy"
+      />
+      <span
+        className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/55 via-transparent to-black/10 transition group-hover:opacity-80"
+        aria-hidden
+      />
+    </button>
+  );
+}
+
+function VideoLightbox({
+  clip,
+  onClose,
+}: {
+  clip: MarqueeClip | null;
+  onClose: () => void;
+}) {
+  useEffect(() => {
+    if (!clip) return;
+    const handleKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") onClose();
+    };
+    document.addEventListener("keydown", handleKey);
+    const prevOverflow = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    return () => {
+      document.removeEventListener("keydown", handleKey);
+      document.body.style.overflow = prevOverflow;
+    };
+  }, [clip, onClose]);
+
+  return (
+    <AnimatePresence>
+      {clip && (
+        <motion.div
+          key="lightbox"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          transition={{ duration: 0.2 }}
+          className="fixed inset-0 z-[100] flex items-center justify-center bg-black/85 p-4 backdrop-blur-md sm:p-6"
+          role="dialog"
+          aria-modal="true"
+          aria-label={clip.title}
+          onClick={onClose}
         >
-          <Image
-            src={thumbUrl}
-            alt={clip.title}
-            fill
-            sizes="(max-width:640px) 20vw, (max-width:1024px) 20vw, 200px"
-            className="object-cover transition group-hover:scale-[1.03]"
-            unoptimized
-            loading="lazy"
-          />
-          <span
-            className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/55 via-transparent to-black/10 opacity-100 transition group-hover:opacity-80"
-            aria-hidden
-          />
-        </button>
+          <motion.div
+            initial={{ opacity: 0, scale: 0.92 }}
+            animate={{ opacity: 1, scale: 1 }}
+            exit={{ opacity: 0, scale: 0.92 }}
+            transition={{ duration: 0.22, ease: [0.22, 1, 0.36, 1] }}
+            className="relative w-auto max-w-full"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <button
+              type="button"
+              onClick={onClose}
+              aria-label="إغلاق"
+              className="absolute -top-12 right-0 inline-flex h-10 w-10 items-center justify-center rounded-full border border-white/20 bg-black/60 text-white backdrop-blur-md transition hover:border-brand/60 hover:bg-black/80 focus:outline-none focus-visible:ring-2 focus-visible:ring-brand/70 sm:-top-14 sm:h-11 sm:w-11"
+            >
+              <X className="h-5 w-5" />
+            </button>
+
+            <div
+              className="relative aspect-[9/16] h-[min(85vh,calc(100vw*16/9))] overflow-hidden rounded-2xl border border-white/15 bg-black shadow-[0_24px_80px_rgba(30,111,217,0.35)]"
+              style={{ maxWidth: "92vw" }}
+            >
+              <iframe
+                src={`https://player.vimeo.com/video/${encodeURIComponent(
+                  clip.vimeoId
+                )}?autoplay=1&playsinline=1&title=0&byline=0&portrait=0&dnt=1`}
+                className="absolute inset-0 h-full w-full border-0"
+                allow="autoplay; fullscreen; picture-in-picture; encrypted-media; web-share"
+                allowFullScreen
+                referrerPolicy="strict-origin-when-cross-origin"
+                title={clip.title}
+              />
+            </div>
+          </motion.div>
+        </motion.div>
       )}
-    </div>
+    </AnimatePresence>
   );
 }

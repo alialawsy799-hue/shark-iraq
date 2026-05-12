@@ -7,6 +7,7 @@ import { ChevronRight, MessageCircle } from "lucide-react";
 import type { Category, Product } from "@/lib/data";
 import { buildWhatsappOrderMessage, buildWhatsappUrl, site } from "@/lib/site";
 import { SharkFeedbackSection } from "./Reviews";
+import { DualVideoMarquees } from "./VideoMarquee";
 
 function VimeoLargeEmbed({ vimeoId, title }: { vimeoId: string; title: string }) {
   const src = `https://player.vimeo.com/video/${encodeURIComponent(
@@ -55,6 +56,26 @@ export function ProductPageClient({
             <ChevronRight className="h-3.5 w-3.5 text-white/30" />
             <span className="text-white/85">{product.name}</span>
           </nav>
+        </div>
+      </section>
+
+      {/* فيدباك عن المنتج — شريط الفيديوهات فوق صورة المنتج */}
+      <section className="relative min-w-0 overflow-x-clip pb-6 pt-4 sm:pb-8 sm:pt-6">
+        <div className="shark-container">
+          <div className="mb-3 text-center sm:mb-4">
+            <p className="text-[11px] font-bold uppercase tracking-[0.2em] text-white/40">
+              آراء حقيقية بالفيديو
+            </p>
+            <h2
+              dir="rtl"
+              className="mt-1 text-xl font-extrabold text-white sm:text-2xl"
+            >
+              فيدباك عن المنتج
+            </h2>
+          </div>
+        </div>
+        <div className="shark-container min-w-0 max-w-5xl">
+          <DualVideoMarquees />
         </div>
       </section>
 

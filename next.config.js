@@ -6,6 +6,12 @@ const nextConfig = {
   turbopack: {
     root: __dirname,
   },
+  images: {
+    remotePatterns: [
+      { protocol: "https", hostname: "vumbnail.com" },
+      { protocol: "https", hostname: "i.vimeocdn.com" },
+    ],
+  },
 };
 
 module.exports = nextConfig;

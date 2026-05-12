@@ -1,6 +1,6 @@
 "use client";
 
-import { DualVideoMarquees } from "./VideoMarquee";
+import { VideoGrid } from "./VideoGrid";
 
 export function VideoShowcaseSection() {
   return (
@@ -19,12 +19,12 @@ export function VideoShowcaseSection() {
           dir="rtl"
           className="mx-auto mt-2 max-w-xl text-center text-sm text-white/55"
         >
-          فيديوهات من ثقة المستخدمين — لقطات حقيقية من التجربة والمتابعة مع SHARK TEAM، تعكس الشفافية
-          والالتزام بالجودة قبل أن تختار. يمكنك تشغيل الصوت على أي مقطع عبر زر «صوت» عند الحاجة.
+          فيديوهات من ثقة المستخدمين — لقطات حقيقية من التجربة والمتابعة مع SHARK TEAM. اضغط على
+          زر التشغيل على أي مقطع لمشاهدته بالصوت.
         </p>
       </div>
-      <div className="shark-container mt-8 min-w-0 max-w-5xl">
-        <DualVideoMarquees />
+      <div className="shark-container mt-8 min-w-0 max-w-6xl">
+        <VideoGrid targetRows={10} />
       </div>
     </section>
   );

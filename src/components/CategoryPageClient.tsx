@@ -3,9 +3,16 @@
 import Image from "next/image";
 import Link from "next/link";
 import { motion } from "framer-motion";
-import { ChevronLeft } from "lucide-react";
-import type { Category, Product } from "@/lib/data";
+import { Beaker, Flame, ShieldPlus, Sparkles } from "lucide-react";
+import type { Category, CategorySlug, Product } from "@/lib/data";
 import { site } from "@/lib/site";
+
+const productIconByCategory: Record<CategorySlug, React.ReactNode> = {
+  supplements: <Beaker className="h-7 w-7 sm:h-8 sm:w-8" />,
+  "weight-loss": <Flame className="h-7 w-7 sm:h-8 sm:w-8" />,
+  "hair-care": <Sparkles className="h-7 w-7 sm:h-8 sm:w-8" />,
+  dental: <ShieldPlus className="h-7 w-7 sm:h-8 sm:w-8" />,
+};
 
 /** يقسّم السطر الفرعي على • بأسلوب عرض أنظف */
 function CategorySubtitle({ text }: { text: string }) {
@@ -153,22 +160,12 @@ export function CategoryPageClient({
                     aria-hidden
                   />
 
-                  <div className="relative h-16 w-16 overflow-hidden rounded-2xl border border-brand/30 bg-white/95 p-1.5 shadow-[0_0_24px_rgba(30,111,217,0.18)] transition group-hover:border-brand/55 sm:h-20 sm:w-20">
-                    <Image
-                      src={p.image}
-                      alt=""
-                      fill
-                      sizes="(max-width:640px) 6rem, 8rem"
-                      className="object-contain p-1"
-                    />
+                  <div className="relative inline-flex h-14 w-14 items-center justify-center rounded-2xl border border-brand/30 bg-brand/10 text-brand shadow-[0_0_24px_rgba(30,111,217,0.18)] transition group-hover:border-brand/55 group-hover:bg-brand/[0.16] sm:h-16 sm:w-16">
+                    {productIconByCategory[category.slug] ?? <Sparkles className="h-7 w-7" />}
                   </div>
 
-                  <div className="relative mt-3 line-clamp-2 text-base font-extrabold leading-tight text-white sm:mt-4 sm:text-lg">
+                  <div className="relative mt-3 line-clamp-2 text-base font-extrabold leading-tight text-white sm:mt-4 sm:text-xl">
                     {p.name}
-                  </div>
-                  <div className="relative mt-2 flex items-center justify-center gap-1.5 text-[11px] font-extrabold tracking-[0.18em] text-brand/85">
-                    <span>عرض المنتج</span>
-                    <ChevronLeft className="h-3.5 w-3.5 transition group-hover:-translate-x-0.5" />
                   </div>
                 </Link>
               </motion.li>

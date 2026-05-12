@@ -179,17 +179,8 @@ function VideoLightbox({
             className="relative w-auto max-w-full"
             onClick={(e) => e.stopPropagation()}
           >
-            <button
-              type="button"
-              onClick={onClose}
-              aria-label="إغلاق"
-              className="absolute -top-12 right-0 inline-flex h-10 w-10 items-center justify-center rounded-full border border-white/20 bg-black/60 text-white backdrop-blur-md transition hover:border-brand/60 hover:bg-black/80 focus:outline-none focus-visible:ring-2 focus-visible:ring-brand/70 sm:-top-14 sm:h-11 sm:w-11"
-            >
-              <X className="h-5 w-5" />
-            </button>
-
             <div
-              className="relative aspect-[9/16] h-[min(85vh,calc(100vw*16/9))] overflow-hidden rounded-2xl border border-white/15 bg-black shadow-[0_24px_80px_rgba(30,111,217,0.35)]"
+              className="relative aspect-[9/16] h-[min(82vh,calc(100vw*16/9))] overflow-hidden rounded-2xl border border-white/15 bg-black shadow-[0_24px_80px_rgba(30,111,217,0.35)]"
               style={{ maxWidth: "92vw" }}
             >
               <iframe
@@ -202,6 +193,15 @@ function VideoLightbox({
                 referrerPolicy="strict-origin-when-cross-origin"
                 title={clip.title}
               />
+
+              <button
+                type="button"
+                onClick={onClose}
+                aria-label="إغلاق الفيديو"
+                className="absolute right-2 top-2 z-20 inline-flex h-10 w-10 items-center justify-center rounded-full border-2 border-white/30 bg-black/75 text-white shadow-[0_6px_20px_rgba(0,0,0,0.55)] backdrop-blur-md transition hover:scale-105 hover:border-white/60 hover:bg-black/90 active:scale-95 focus:outline-none focus-visible:ring-2 focus-visible:ring-white/70 sm:right-3 sm:top-3 sm:h-12 sm:w-12"
+              >
+                <X className="h-6 w-6 sm:h-7 sm:w-7" strokeWidth={2.5} />
+              </button>
             </div>
           </motion.div>
         </motion.div>

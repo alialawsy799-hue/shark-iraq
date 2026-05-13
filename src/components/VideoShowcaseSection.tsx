@@ -24,7 +24,7 @@ export function VideoShowcaseSection() {
         </p>
       </div>
       <div className="shark-container mt-8 min-w-0 max-w-6xl">
-        <VideoGrid targetRows={10} />
+        <VideoGrid />
       </div>
     </section>
   );

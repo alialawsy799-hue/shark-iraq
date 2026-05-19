@@ -142,6 +142,8 @@ function VideoLightbox({
   clip: MarqueeClip | null;
   onClose: () => void;
 }) {
+  const [playable, setPlayable] = useState<"checking" | "ok" | "missing">("checking");
+
   useEffect(() => {
     if (!clip) return;
     const handleKey = (e: KeyboardEvent) => {
@@ -155,6 +157,27 @@ function VideoLightbox({
       document.body.style.overflow = prevOverflow;
     };
   }, [clip, onClose]);
+
+  useEffect(() => {
+    if (!clip) return;
+    let cancelled = false;
+    setPlayable("checking");
+    (async () => {
+      try {
+        const res = await fetch(
+          `https://vimeo.com/api/oembed.json?url=${encodeURIComponent(
+            `https://vimeo.com/${clip.vimeoId}`
+          )}`
+        );
+        if (!cancelled) setPlayable(res.ok ? "ok" : "missing");
+      } catch {
+        if (!cancelled) setPlayable("missing");
+      }
+    })();
+    return () => {
+      cancelled = true;
+    };
+  }, [clip]);
 
   return (
     <AnimatePresence>
@@ -183,16 +206,39 @@ function VideoLightbox({
               className="relative aspect-[9/16] h-[min(82vh,calc(100vw*16/9))] overflow-hidden rounded-2xl border border-white/15 bg-black shadow-[0_24px_80px_rgba(30,111,217,0.35)]"
               style={{ maxWidth: "92vw" }}
             >
-              <iframe
-                src={`https://player.vimeo.com/video/${encodeURIComponent(
-                  clip.vimeoId
-                )}?autoplay=1&playsinline=1&title=0&byline=0&portrait=0&dnt=1`}
-                className="absolute inset-0 h-full w-full border-0"
-                allow="autoplay; fullscreen; picture-in-picture; encrypted-media; web-share"
-                allowFullScreen
-                referrerPolicy="strict-origin-when-cross-origin"
-                title={clip.title}
-              />
+              {playable === "checking" && (
+                <motion.div
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  className="absolute inset-0 grid place-items-center bg-black/90"
+                >
+                  <div className="h-8 w-8 animate-spin rounded-full border-2 border-white/20 border-t-brand" />
+                </motion.div>
+              )}
+
+              {playable === "missing" && (
+                <div className="absolute inset-0 grid place-items-center bg-black/95 p-6 text-center">
+                  <p className="text-lg font-extrabold text-white">الفيديو غير متوفر</p>
+                  <p dir="rtl" className="mt-2 text-sm leading-7 text-white/65">
+                    هذا المقطع محذوف أو غير متاح على Vimeo. أرسل رابط embed جديد ليُستبدل
+                    في الموقع.
+                  </p>
+                  <p className="mt-3 font-mono text-xs text-white/40">ID: {clip.vimeoId}</p>
+                </div>
+              )}
+
+              {playable === "ok" && (
+                <iframe
+                  src={`https://player.vimeo.com/video/${encodeURIComponent(
+                    clip.vimeoId
+                  )}?autoplay=1&playsinline=1&title=0&byline=0&portrait=0&dnt=1`}
+                  className="absolute inset-0 h-full w-full border-0"
+                  allow="autoplay; fullscreen; picture-in-picture; encrypted-media; web-share"
+                  allowFullScreen
+                  referrerPolicy="strict-origin-when-cross-origin"
+                  title={clip.title}
+                />
+              )}
 
               <button
                 type="button"
@@ -209,3 +255,4 @@ function VideoLightbox({
     </AnimatePresence>
   );
 }
+

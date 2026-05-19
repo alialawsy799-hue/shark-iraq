@@ -20,10 +20,10 @@ export type MarqueeClip = {
  */
 const sourceVideos: Pick<MarqueeClip, "vimeoId">[] = [
   // الصف 1 (5)
-  { vimeoId: "1191350045" },
+  { vimeoId: "1191528755" }, // أول فيديو من اليمين
   { vimeoId: "1191349877" },
   { vimeoId: "1191349875" },
-  { vimeoId: "1191349915" },
+  { vimeoId: "1191529174" }, // ثاني من اليسار
   { vimeoId: "1191349872" },
   // الصف 2 (4)
   { vimeoId: "1191352195" },

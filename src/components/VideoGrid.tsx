@@ -5,7 +5,7 @@ import { AnimatePresence, motion } from "framer-motion";
 import { X } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
 import type { MarqueeClip } from "@/lib/video-marquee";
-import { defaultMarqueeVideos } from "@/lib/video-marquee";
+import { defaultMarqueeVideos, formatViewCount } from "@/lib/video-marquee";
 
 type Props = {
   videos?: MarqueeClip[];
@@ -197,7 +197,25 @@ function VideoTile({
         className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/55 via-transparent to-black/10 transition group-hover:opacity-80"
         aria-hidden
       />
+      <span
+        className="pointer-events-none absolute bottom-2.5 left-2.5 z-10 flex items-center gap-[0.35rem] text-white drop-shadow-[0_1px_4px_rgba(0,0,0,0.9)] sm:bottom-3 sm:left-3 sm:gap-1.5"
+        aria-hidden
+      >
+        <ViewsEyeIcon className="h-[0.7rem] w-[1.05rem] shrink-0 sm:h-[0.75rem] sm:w-[1.125rem]" />
+        <span className="text-[0.8125rem] font-bold leading-none tracking-tight sm:text-[0.875rem]">
+          {formatViewCount(clip.viewCount)}
+        </span>
+      </span>
     </button>
+  );
+}
+
+/** أيقونة المشاهدات (عين) — وليس زر التشغيل */
+function ViewsEyeIcon({ className }: { className?: string }) {
+  return (
+    <svg viewBox="0 0 20 14" className={className} fill="currentColor" aria-hidden>
+      <path d="M10 2C5.8 2 2.2 4.5 0.5 7 2.2 9.5 5.8 12 10 12s7.8-2.5 9.5-5C17.8 4.5 14.2 2 10 2zm0 7.25a2.25 2.25 0 1 1 0-4.5 2.25 2.25 0 0 1 0 4.5z" />
+    </svg>
   );
 }
 

@@ -98,7 +98,7 @@ export function ProductPageClient({
               </h1>
               <p
                 dir="rtl"
-                className="mt-4 text-pretty text-base leading-8 text-white/75 sm:text-lg"
+                className="mt-4 whitespace-pre-line text-pretty text-base leading-8 text-white/75 sm:text-lg"
               >
                 {product.bio}
               </p>

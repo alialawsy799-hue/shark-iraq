@@ -30,6 +30,54 @@ function chunkAlternating(videos: MarqueeClip[]): MarqueeClip[][] {
   return rows;
 }
 
+/** جلب thumbnail مباشرة من Vimeo (يعكس الصورة المخصّصة في إعدادات الفيديو) */
+async function fetchVimeoThumbnail(vimeoId: string): Promise<string | null> {
+  try {
+    const res = await fetch(
+      `https://vimeo.com/api/oembed.json?url=${encodeURIComponent(
+        `https://vimeo.com/${vimeoId}`
+      )}&width=1280`
+    );
+    if (!res.ok) return null;
+    const data = (await res.json()) as { thumbnail_url?: string };
+    return data.thumbnail_url ?? null;
+  } catch {
+    return null;
+  }
+}
+
+/** يحمّل كل المعرفات الفريدة دفعات لتجنّب حد الطلبات */
+function useVimeoThumbnails(uniqueIds: string[]) {
+  const idsKey = uniqueIds.join(",");
+  const [thumbs, setThumbs] = useState<Record<string, string>>({});
+
+  useEffect(() => {
+    if (uniqueIds.length === 0) return;
+    let cancelled = false;
+    const map: Record<string, string> = {};
+
+    (async () => {
+      const BATCH = 5;
+      for (let i = 0; i < uniqueIds.length; i += BATCH) {
+        const batch = uniqueIds.slice(i, i + BATCH);
+        await Promise.all(
+          batch.map(async (id) => {
+            const url = await fetchVimeoThumbnail(id);
+            if (url) map[id] = url;
+          })
+        );
+        if (!cancelled) setThumbs({ ...map });
+      }
+    })();
+
+    return () => {
+      cancelled = true;
+    };
+  }, [idsKey]);
+
+  return thumbs;
+}
+
 /** يكرر الفيديوهات بنفس الترتيب لملء العدد المطلوب من الفتحات (Slots) */
 function expandToTargetRows(
   videos: MarqueeClip[],
@@ -62,6 +110,11 @@ export function VideoGrid({
     [videos, targetRows]
   );
   const rows = chunkAlternating(displayVideos);
+  const uniqueVimeoIds = useMemo(
+    () => [...new Set(displayVideos.map((c) => c.vimeoId))],
+    [displayVideos]
+  );
+  const thumbs = useVimeoThumbnails(uniqueVimeoIds);
 
   return (
     <>
@@ -89,7 +142,11 @@ export function VideoGrid({
                     isOffsetRow && idx === 0 ? "col-start-2" : "",
                   ].join(" ")}
                 >
-                  <VideoTile clip={clip} onOpen={() => setActiveClip(clip)} />
+                  <VideoTile
+                    clip={clip}
+                    thumbUrl={thumbs[clip.vimeoId]}
+                    onOpen={() => setActiveClip(clip)}
+                  />
                 </motion.li>
               ))}
             </ul>
@@ -104,13 +161,13 @@ export function VideoGrid({
 
 function VideoTile({
   clip,
+  thumbUrl,
   onOpen,
 }: {
   clip: MarqueeClip;
+  thumbUrl?: string;
   onOpen: () => void;
 }) {
-  const thumbUrl = `https://vumbnail.com/${clip.vimeoId}.jpg`;
-
   return (
     <button
       type="button"
@@ -118,15 +175,22 @@ function VideoTile({
       aria-label={`فتح ${clip.title}`}
       className="group relative block aspect-[9/16] w-full overflow-hidden rounded-xl border border-white/10 bg-black shadow-[0_0_0_1px_rgba(30,111,217,0.18)] focus:outline-none focus-visible:ring-2 focus-visible:ring-brand/60 sm:rounded-2xl"
     >
-      <Image
-        src={thumbUrl}
-        alt={clip.title}
-        fill
-        sizes="(max-width:640px) 20vw, (max-width:1024px) 20vw, 200px"
-        className="object-cover transition group-hover:scale-[1.03]"
-        unoptimized
-        loading="lazy"
-      />
+      {thumbUrl ? (
+        <Image
+          src={thumbUrl}
+          alt={clip.title}
+          fill
+          sizes="(max-width:640px) 20vw, (max-width:1024px) 20vw, 200px"
+          className="object-cover transition group-hover:scale-[1.03]"
+          unoptimized
+          loading="lazy"
+        />
+      ) : (
+        <div
+          className="absolute inset-0 animate-pulse bg-gradient-to-br from-brand/20 via-black to-brand/10"
+          aria-hidden
+        />
+      )}
       <span
         className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/55 via-transparent to-black/10 transition group-hover:opacity-80"
         aria-hidden

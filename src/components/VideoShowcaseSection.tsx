@@ -23,7 +23,7 @@ export function VideoShowcaseSection() {
           زر التشغيل على أي مقطع لمشاهدته بالصوت.
         </p>
       </div>
-      <div className="shark-container mt-8 min-w-0 max-w-6xl">
+      <div className="mx-auto mt-8 w-full max-w-[min(100%,88rem)] px-[max(1.125rem,env(safe-area-inset-left,0px),env(safe-area-inset-right,0px))] sm:px-[max(1.5rem,env(safe-area-inset-left,0px),env(safe-area-inset-right,0px))]">
         <VideoGrid />
       </div>
     </section>

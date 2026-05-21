@@ -15,7 +15,7 @@ type Props = {
 
 /**
  * يقسّم القائمة على نمط متناوب 5 - 4 - 5 - 4 ... لإنتاج صفوف نشطة بصرياً.
- * الصف ذو 4 بطاقات يُزاح للوسط (offset نصف بطاقة على كل جانب) داخل شبكة من 10 أعمدة.
+ * الصف ذو 4 بطاقات يُوسّط بعرض أضيق قليلاً عن صفوف الـ 5.
  */
 function chunkAlternating(videos: MarqueeClip[]): MarqueeClip[][] {
   const rows: MarqueeClip[][] = [];
@@ -118,14 +118,19 @@ export function VideoGrid({
 
   return (
     <>
-      <div className="space-y-1.5 sm:space-y-3 lg:space-y-4">
+      <div className="space-y-2 sm:space-y-4 lg:space-y-5">
         {rows.map((row, rowIdx) => {
           const isOffsetRow = row.length === 4;
           return (
             <ul
               key={`row-${rowIdx}`}
               role="list"
-              className="grid grid-cols-10 gap-1.5 sm:gap-3 lg:gap-4"
+              className={[
+                "grid list-none gap-2 sm:gap-4 lg:gap-5",
+                isOffsetRow
+                  ? "mx-auto w-full max-w-[92%] grid-cols-4"
+                  : "grid-cols-5",
+              ].join(" ")}
             >
               {row.map((clip, idx) => (
                 <motion.li
@@ -137,10 +142,7 @@ export function VideoGrid({
                     duration: 0.35,
                     delay: Math.min(idx * 0.015, 0.2),
                   }}
-                  className={[
-                    "col-span-2 min-w-0",
-                    isOffsetRow && idx === 0 ? "col-start-2" : "",
-                  ].join(" ")}
+                  className="min-w-0"
                 >
                   <VideoTile
                     clip={clip}
@@ -173,14 +175,14 @@ function VideoTile({
       type="button"
       onClick={onOpen}
       aria-label={`فتح ${clip.title}`}
-      className="group relative block aspect-[9/16] w-full overflow-hidden rounded-xl border border-white/10 bg-black shadow-[0_0_0_1px_rgba(30,111,217,0.18)] focus:outline-none focus-visible:ring-2 focus-visible:ring-brand/60 sm:rounded-2xl"
+      className="group relative block aspect-[9/16] w-full overflow-hidden rounded-2xl border border-white/10 bg-black shadow-[0_0_0_1px_rgba(30,111,217,0.18)] focus:outline-none focus-visible:ring-2 focus-visible:ring-brand/60"
     >
       {thumbUrl ? (
         <Image
           src={thumbUrl}
           alt={clip.title}
           fill
-          sizes="(max-width:640px) 20vw, (max-width:1024px) 20vw, 200px"
+          sizes="(max-width:640px) 22vw, (max-width:1024px) 20vw, 240px"
           className="object-cover transition group-hover:scale-[1.03]"
           unoptimized
           loading="lazy"

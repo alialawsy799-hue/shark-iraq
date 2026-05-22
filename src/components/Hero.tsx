@@ -5,6 +5,7 @@ import { motion } from "framer-motion";
 import { ArrowUpLeft } from "lucide-react";
 import { arabicBioPlaceholder, heroHeadlineAr } from "@/lib/data";
 import { site } from "@/lib/site";
+import { HeroYoutubeBackground } from "./HeroYoutubeBackground";
 
 /** يفصل العنوان لإبراز الجزء العربي باللون */
 function HeadlineDisplay() {
@@ -29,20 +30,12 @@ function HeadlineDisplay() {
 
 export function Hero() {
   return (
-    <section className="relative min-w-0 overflow-x-clip pt-12 pb-16 sm:pt-14 sm:pb-20">
-      {/* توهج خفيف في الخلفية */}
-      <div
-        className="pointer-events-none absolute left-1/2 top-0 h-[min(85vh,520px)] w-[min(140%,920px)] -translate-x-1/2 rounded-[50%] blur-[100px]"
-        style={{
-          background:
-            "radial-gradient(ellipse 65% 55% at 50% 35%, rgba(30, 111, 217, 0.28) 0%, rgba(43, 126, 235, 0.08) 45%, transparent 72%)",
-        }}
-      />
-      <div className="pointer-events-none absolute left-1/2 top-[14%] h-56 w-56 -translate-x-1/2 rounded-full bg-brand/15 blur-3xl" />
+    <section className="relative isolate min-h-[min(92vh,880px)] min-w-0 overflow-x-clip pt-12 pb-16 sm:pt-14 sm:pb-20">
+      <HeroYoutubeBackground videoId={site.heroYoutubeVideoId} />
 
-      <div className="relative shark-container">
+      <div className="relative z-[1] shark-container">
         {/* شريط الهوية: محاذاة واضحة، فاصل بصري عن المحتوى */}
-        <header className="flex w-full items-center justify-start gap-0 border-b border-white/[0.07] pb-6 sm:pb-7">
+        <header className="flex w-full items-center justify-start gap-0 border-b border-white/[0.12] pb-6 sm:pb-7">
           <div className="flex min-w-0 items-center gap-3.5 sm:gap-5">
             <div
               className={[
@@ -94,7 +87,7 @@ export function Hero() {
 
           <p
             dir="rtl"
-            className="mt-6 max-w-2xl text-pretty text-base leading-8 text-white/60 sm:mt-8 sm:text-lg sm:leading-9"
+            className="mt-6 max-w-2xl text-pretty text-base leading-8 text-white/75 sm:mt-8 sm:text-lg sm:leading-9"
           >
             {arabicBioPlaceholder}
           </p>

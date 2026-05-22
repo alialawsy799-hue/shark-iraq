@@ -1,6 +1,8 @@
 export const site = {
   name: "SHARK TEAM",
   tagline: "القمة في التغذية والتدريب",
+  /** فيديو خلفية الهيرو — YouTube Shorts */
+  heroYoutubeVideoId: "OMWgB3RCF68",
   whatsappNumberE164: "9640000000000",
   telegram: "https://t.me/sharkteam",
   instagram: "https://instagram.com/sharkteam",

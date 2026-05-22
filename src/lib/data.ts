@@ -201,6 +201,7 @@ export const products: Product[] = [
     ].join("\n\n"),
     priceIQD: 42000,
     image: "/products/shark-burner.png",
+    gallery: ["/products/shark-burner.png", "/products/shark-burner-carousel-2.png"],
     howToUseVimeoId: "76979871",
     specs: [
       { label: "حجم الجرعة", value: "كبسولة واحدة" },

@@ -29,6 +29,8 @@ export type Product = {
   gallery?: string[];
   specs: ProductSpec[];
   howToUseVimeoId: string;
+  /** بطاقة «قريباً» — غير قابلة للنقر */
+  comingSoon?: boolean;
 };
 
 /** صور العرض: الكاروسيل إن وُجد، وإلا الصورة الرئيسية */
@@ -131,10 +133,16 @@ export const products: Product[] = [
     id: "sup-protein",
     category: "supplements",
     name: "بروتين",
-    bio: "بروتين عالي الجودة لدعم بناء الكتلة العضلية والتعافي بعد التمرين.",
+    bio: [
+      "شارك أيزو بروتين — 100% Pure Iso Protein لبناء العضل والتعافي.",
+      "٢٤ غرام بروتين بمغرفة واحدة، ١١٠ سعرة حرارية فقط، بنكهة الشوكولاتة.",
+    ].join(" "),
     priceIQD: 52000,
-    image: "/products/shark-protein.png",
-    gallery: ["/products/shark-protein.png"],
+    image: "/products/shark-protein-carousel-1.png",
+    gallery: [
+      "/products/shark-protein-carousel-1.png",
+      "/products/shark-protein-carousel-2.png",
+    ],
     howToUseVimeoId: "76979871",
     specs: [
       { label: "الجرعة", value: "مغرفة واحدة" },
@@ -146,14 +154,37 @@ export const products: Product[] = [
     id: "sup-creatine",
     category: "supplements",
     name: "كرياتين",
-    bio: "كرياتين أحادي هيدرات نقي لدعم القوة والأداء الرياضي.",
+    bio: [
+      "كرياتين أحادي هيدرات Micronized لرفع الطاقة والقوة وتحمل التمارين.",
+      "يدعم بناء عضل نظيف — ٣ غرامات للجرعة، ٨٤ حصة بالعلبة.",
+    ].join(" "),
     priceIQD: 45000,
     image: "/products/creatine-shark.png",
+    gallery: ["/products/creatine-shark.png", "/products/creatine-shark-carousel-2.png"],
     howToUseVimeoId: "76979871",
     specs: [
       { label: "حجم الجرعة", value: "٥ غرامات" },
       { label: "أفضل وقت", value: "بعد التمرين أو وقت مناسب" },
       { label: "الهدف", value: "قوة واندفاع" },
+    ],
+  },
+  {
+    id: "sup-shark-sleep",
+    category: "supplements",
+    name: "Shark Sleep",
+    bio: [
+      "مكمّل يساعد على تعديل الساعة البيولوجية والنوم والاستشفاء الكامل للعضلات أثناء النوم.",
+      "٦٠ علكة — جرعتان يومياً قبل النوم أو حسب توجيه الاستشارة.",
+    ].join(" "),
+    priceIQD: 48000,
+    image: "/products/shark-sleep-1.png",
+    gallery: ["/products/shark-sleep-1.png", "/products/shark-sleep-2.png"],
+    howToUseVimeoId: "76979871",
+    specs: [
+      { label: "الشكل", value: "علكات (Gummies)" },
+      { label: "الجرعة", value: "علكتان" },
+      { label: "التوقيت", value: "قبل النوم" },
+      { label: "الهدف", value: "نوم أعمق واستشفاء" },
     ],
   },
 
@@ -180,10 +211,12 @@ export const products: Product[] = [
   {
     id: "wl-burner-medical",
     category: "weight-loss",
-    name: "شارك بيرنر طبي",
+    name: "Shark Boiler",
     bio: "تركيبة متقدّمة بمكوّنات مدروسة لدعم برنامج إنقاص الوزن مع متابعة الاستشارة.",
     priceIQD: 55000,
-    image: "/products/shark-burner.png",
+    image: "/products/shark-boiler.png",
+    gallery: ["/products/shark-boiler.png"],
+    comingSoon: true,
     howToUseVimeoId: "76979871",
     specs: [
       { label: "الجرعة", value: "حسب التوصية" },
@@ -215,9 +248,16 @@ export const products: Product[] = [
     id: "hair-supplement",
     category: "hair-care",
     name: "شارك سبلمنت",
-    bio: "مكمّل غذائي مخصّص للشعر لدعم الكثافة والقوة من الداخل بمكوّنات مغذّية.",
+    bio: [
+      "مكمّل فيتامينات ومعادن متعددة — ٣٠ حبة.",
+      "D3 بجرعة ٥٠٠٠ IU، معادن كاملة وفيتامينات لدعم الشعر والطاقة والأيض أثناء الحمية.",
+    ].join(" "),
     priceIQD: 38000,
     image: "/products/shark-supplement.png",
+    gallery: [
+      "/products/shark-supplement.png",
+      "/products/shark-supplement-carousel-2.png",
+    ],
     howToUseVimeoId: "76979871",
     specs: [
       { label: "الجرعة", value: "كبسولة يومياً" },

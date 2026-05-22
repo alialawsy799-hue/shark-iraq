@@ -1,5 +1,5 @@
 import { site } from "@/lib/site";
-import { InstagramGlyph, TelegramGlyph, WhatsAppGlyph } from "./BrandIcons";
+import { WhatsAppGlyph } from "./BrandIcons";
 
 const DEVELOPER_WHATSAPP_E164 = "9647736114455";
 
@@ -37,42 +37,7 @@ export function Footer() {
                   <WhatsAppGlyph className="h-5 w-5" />
                 </span>
                 <span className="text-sm font-semibold">واتساب</span>
-                <span className="ms-auto text-xs text-white/70">طلب واستشارة سريعة</span>
-              </a>
-              <a
-                href={site.telegram}
-                target="_blank"
-                rel="noopener noreferrer"
-                className={[
-                  "inline-flex items-center gap-3 rounded-xl border px-4 py-3 transition",
-                  "border-[#229ED9]/45 bg-[#229ED9]/12 text-white shadow-[0_0_24px_rgba(34,158,217,0.12)]",
-                  "hover:border-[#229ED9]/70 hover:bg-[#229ED9]/20 hover:shadow-[0_0_28px_rgba(34,158,217,0.22)]",
-                ].join(" ")}
-              >
-                <span className="grid h-10 w-10 shrink-0 place-items-center rounded-lg bg-[#229ED9] text-white ring-1 ring-[#229ED9]/55 shadow-[0_0_18px_rgba(34,158,217,0.45)]">
-                  <TelegramGlyph className="h-5 w-5" />
-                </span>
-                <span className="text-sm font-semibold">تيليغرام</span>
-              </a>
-              <a
-                href={site.instagram}
-                target="_blank"
-                rel="noopener noreferrer"
-                className={[
-                  "inline-flex items-center gap-3 rounded-xl border px-4 py-3 transition",
-                  "border-fuchsia-500/35 bg-gradient-to-br from-[#f58529]/14 via-[#dd2a7b]/14 to-[#8134af]/14 text-white",
-                  "shadow-[0_0_24px_rgba(221,42,123,0.1)]",
-                  "hover:border-fuchsia-400/50 hover:from-[#f58529]/22 hover:via-[#dd2a7b]/22 hover:to-[#8134af]/22",
-                  "hover:shadow-[0_0_28px_rgba(129,52,175,0.18)]",
-                ].join(" ")}
-              >
-                <span
-                  className="grid h-10 w-10 shrink-0 place-items-center rounded-lg bg-gradient-to-br from-[#f58529] via-[#dd2a7b] to-[#8134af] text-white ring-1 ring-white/25 shadow-[0_0_18px_rgba(221,42,123,0.35)]"
-                  aria-hidden
-                >
-                  <InstagramGlyph className="h-5 w-5" />
-                </span>
-                <span className="text-sm font-semibold">إنستغرام</span>
+                <span className="ms-auto text-xs text-white/70">استشارة طبية وطلب</span>
               </a>
             </div>
           </div>
@@ -98,3 +63,5 @@ export function Footer() {
     </footer>
   );
 }
+
+

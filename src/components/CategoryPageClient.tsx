@@ -18,6 +18,29 @@ function hasProductPhoto(image: string) {
   return image.startsWith("/products/");
 }
 
+/** نسبة إطار بطاقات المنتجات (مطابقة لصور شارك بيرنر) */
+const PRODUCT_CARD_ASPECT = "aspect-[819/1024]";
+
+function ProductSoonOverlay() {
+  return (
+    <div className="pointer-events-none absolute inset-0 z-20 overflow-hidden rounded-3xl">
+      <div className="absolute inset-0 bg-black/35" aria-hidden />
+      <div
+        className="absolute left-1/2 top-1/2 w-[155%] -translate-x-1/2 -translate-y-1/2 -rotate-45 transform-gpu border-y border-brand/45 bg-gradient-to-r from-brand/95 via-brand-strong to-brand/95 py-2 text-center shadow-[0_8px_28px_rgba(30,111,217,0.55)] sm:py-2.5"
+        role="status"
+        aria-label="قريباً"
+      >
+        <span
+          dir="ltr"
+          className="block text-[15px] font-black tracking-[0.4em] text-white drop-shadow-[0_1px_4px_rgba(0,0,0,0.45)] sm:text-base"
+        >
+          SOON&nbsp;!
+        </span>
+      </div>
+    </div>
+  );
+}
+
 /** يقسّم السطر الفرعي على • بأسلوب عرض أنظف */
 function CategorySubtitle({ text }: { text: string }) {
   const parts = text.split(/\s*•\s*/).map((p) => p.trim()).filter(Boolean);
@@ -142,35 +165,37 @@ export function CategoryPageClient({
             className="mx-auto mt-8 grid w-full max-w-3xl list-none grid-cols-2 gap-3 sm:gap-5 lg:gap-6"
             role="list"
           >
-            {products.map((p, idx) => (
-              <motion.li
-                key={p.id}
-                initial={{ opacity: 0, y: 10 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true, margin: "-40px" }}
-                transition={{ duration: 0.45, delay: idx * 0.05 }}
-              >
-                <Link
-                  href={`/category/${category.slug}/${p.id}`}
-                  aria-label={`فتح ${p.name}`}
-                  className={[
-                    "group shark-card relative w-full overflow-hidden rounded-3xl text-center",
-                    hasProductPhoto(p.image)
-                      ? "block"
-                      : "flex aspect-square flex-col items-center justify-center p-4 sm:p-6",
-                    "transition hover:border-brand/45 hover:shadow-[0_0_40px_rgba(30,111,217,0.18)] active:scale-[0.985]",
-                    "focus:outline-none focus-visible:ring-2 focus-visible:ring-brand/55",
-                  ].join(" ")}
-                >
+            {products.map((p, idx) => {
+              const isComingSoon = Boolean(p.comingSoon);
+              const cardClass = [
+                "group shark-card relative w-full overflow-hidden rounded-3xl text-center",
+                hasProductPhoto(p.image)
+                  ? `block ${PRODUCT_CARD_ASPECT}`
+                  : "flex aspect-square flex-col items-center justify-center p-4 sm:p-6",
+                isComingSoon
+                  ? "cursor-not-allowed"
+                  : "transition hover:border-brand/45 hover:shadow-[0_0_40px_rgba(30,111,217,0.18)] active:scale-[0.985] focus:outline-none focus-visible:ring-2 focus-visible:ring-brand/55",
+              ].join(" ");
+
+              const cardInner = (
+                <>
                   {hasProductPhoto(p.image) ? (
-                    <div className="relative w-full leading-none">
+                    <div
+                      className={[
+                        "relative h-full w-full bg-black",
+                        isComingSoon ? "blur-[3px] opacity-55 saturate-75" : "",
+                      ].join(" ")}
+                      aria-hidden={isComingSoon || undefined}
+                    >
                       <Image
                         src={p.image}
                         alt={p.name}
-                        width={819}
-                        height={1024}
+                        fill
                         sizes="(max-width:640px) 45vw, 320px"
-                        className="block h-auto w-full transition duration-300 group-hover:scale-[1.02]"
+                        className={[
+                          "object-cover object-center",
+                          isComingSoon ? "" : "transition duration-300 group-hover:scale-[1.03]",
+                        ].join(" ")}
                       />
                       <div
                         className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/85 via-black/20 to-transparent"
@@ -188,19 +213,52 @@ export function CategoryPageClient({
                         className="pointer-events-none absolute inset-0 rounded-3xl bg-[radial-gradient(ellipse_70%_60%_at_50%_25%,rgba(30,111,217,0.16),transparent_70%)] opacity-80 transition group-hover:opacity-100"
                         aria-hidden
                       />
-                      <div className="relative inline-flex h-14 w-14 items-center justify-center rounded-2xl border border-brand/30 bg-brand/10 text-brand shadow-[0_0_24px_rgba(30,111,217,0.18)] transition group-hover:border-brand/55 group-hover:bg-brand/[0.16] sm:h-16 sm:w-16">
-                        {productIconByCategory[category.slug] ?? (
-                          <Sparkles className="h-7 w-7" />
-                        )}
-                      </div>
-                      <div className="relative mt-3 line-clamp-2 text-base font-extrabold leading-tight text-white sm:mt-4 sm:text-xl">
-                        {p.name}
+                      <div
+                        className={[
+                          "relative flex flex-col items-center",
+                          isComingSoon ? "blur-[3px] opacity-55 saturate-75" : "",
+                        ].join(" ")}
+                        aria-hidden={isComingSoon || undefined}
+                      >
+                        <div className="inline-flex h-14 w-14 items-center justify-center rounded-2xl border border-brand/30 bg-brand/10 text-brand shadow-[0_0_24px_rgba(30,111,217,0.18)] sm:h-16 sm:w-16">
+                          {productIconByCategory[category.slug] ?? (
+                            <Sparkles className="h-7 w-7" />
+                          )}
+                        </div>
+                        <div className="mt-3 line-clamp-2 text-base font-extrabold leading-tight text-white sm:mt-4 sm:text-xl">
+                          {p.name}
+                        </div>
                       </div>
                     </>
                   )}
-                </Link>
-              </motion.li>
-            ))}
+                  {isComingSoon && <ProductSoonOverlay />}
+                </>
+              );
+
+              return (
+                <motion.li
+                  key={p.id}
+                  initial={{ opacity: 0, y: 10 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true, margin: "-40px" }}
+                  transition={{ duration: 0.45, delay: idx * 0.05 }}
+                >
+                  {isComingSoon ? (
+                    <div className={cardClass} role="status" aria-label={`${p.name} — قريباً`}>
+                      {cardInner}
+                    </div>
+                  ) : (
+                    <Link
+                      href={`/category/${category.slug}/${p.id}`}
+                      aria-label={`فتح ${p.name}`}
+                      className={cardClass}
+                    >
+                      {cardInner}
+                    </Link>
+                  )}
+                </motion.li>
+              );
+            })}
           </ul>
         </div>
       </section>

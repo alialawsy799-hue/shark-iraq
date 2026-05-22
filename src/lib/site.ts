@@ -3,9 +3,8 @@ export const site = {
   tagline: "القمة في التغذية والتدريب",
   /** فيديو خلفية الهيرو — YouTube Shorts */
   heroYoutubeVideoId: "OMWgB3RCF68",
-  whatsappNumberE164: "9640000000000",
-  telegram: "https://t.me/sharkteam",
-  instagram: "https://instagram.com/sharkteam",
+  /** واتساب الاستشارة الطبية والطلب */
+  whatsappNumberE164: "9647718669911",
   whatsappNoteAr:
     "ملاحظة: الطلب يكون عبر واتساب للحصول على استشارة صحية أفضل قبل الشراء.",
 };

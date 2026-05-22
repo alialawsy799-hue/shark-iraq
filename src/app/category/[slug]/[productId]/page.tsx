@@ -13,7 +13,7 @@ export default async function ProductPage({
   if (!category) return notFound();
 
   const product = getProductById(productId);
-  if (!product || product.category !== category.slug) return notFound();
+  if (!product || product.category !== category.slug || product.comingSoon) return notFound();
 
   return (
     <>

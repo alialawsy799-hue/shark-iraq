@@ -25,9 +25,17 @@ export type Product = {
   bio: string;
   priceIQD: number;
   image: string;
+  /** صور الكاروسيل — أضف المسارات هنا بعد رفع الصور إلى public/products/ */
+  gallery?: string[];
   specs: ProductSpec[];
   howToUseVimeoId: string;
 };
+
+/** صور العرض: الكاروسيل إن وُجد، وإلا الصورة الرئيسية */
+export function getProductGallery(product: Product): string[] {
+  if (product.gallery && product.gallery.length > 0) return product.gallery;
+  return [product.image];
+}
 
 export type ProductLineVariant = {
   id: string;
@@ -126,6 +134,7 @@ export const products: Product[] = [
     bio: "بروتين عالي الجودة لدعم بناء الكتلة العضلية والتعافي بعد التمرين.",
     priceIQD: 52000,
     image: "/products/shark-protein.png",
+    gallery: ["/products/shark-protein.png"],
     howToUseVimeoId: "76979871",
     specs: [
       { label: "الجرعة", value: "مغرفة واحدة" },
@@ -188,7 +197,11 @@ export const products: Product[] = [
     name: "شارك أكس",
     bio: "خيار قوي لتحفيز الأيض والنشاط ضمن برنامج غذائي ورياضي منتظم.",
     priceIQD: 48000,
-    image: "/placeholders/product-demo.png",
+    image: "/products/shark-x-carousel-1.png",
+    gallery: [
+      "/products/shark-x-carousel-1.png",
+      "/products/shark-x-carousel-2.png",
+    ],
     howToUseVimeoId: "76979871",
     specs: [
       { label: "الجرعة", value: "كبسولة يومياً" },

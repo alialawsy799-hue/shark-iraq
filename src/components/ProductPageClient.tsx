@@ -1,10 +1,10 @@
 "use client";
 
-import Image from "next/image";
 import Link from "next/link";
 import { motion } from "framer-motion";
 import { ChevronRight, MessageCircle } from "lucide-react";
-import type { Category, Product } from "@/lib/data";
+import { getProductGallery, type Category, type Product } from "@/lib/data";
+import { ProductImageCarousel } from "./ProductImageCarousel";
 import { buildWhatsappOrderMessage, buildWhatsappUrl, site } from "@/lib/site";
 import { SharkFeedbackSection } from "./Reviews";
 
@@ -75,16 +75,10 @@ export function ProductPageClient({
             transition={{ duration: 0.45, ease: [0.22, 1, 0.36, 1] }}
             className="shark-card grid gap-6 rounded-3xl p-5 sm:p-7 md:grid-cols-[minmax(0,0.9fr)_minmax(0,1.1fr)] md:gap-8 md:p-9"
           >
-            <div className="relative mx-auto aspect-square w-full max-w-sm overflow-hidden rounded-2xl border border-white/10 bg-black ring-1 ring-white/5">
-              <Image
-                src={product.image}
-                alt={product.name}
-                fill
-                sizes="(max-width:768px) 100vw, 40vw"
-                className="object-contain"
-                priority
-              />
-            </div>
+            <ProductImageCarousel
+              images={getProductGallery(product)}
+              alt={product.name}
+            />
 
             <div className="flex min-w-0 flex-col text-end">
               <p className="text-[11px] font-extrabold tracking-[0.22em] text-brand sm:text-xs">

@@ -154,42 +154,49 @@ export function CategoryPageClient({
                   href={`/category/${category.slug}/${p.id}`}
                   aria-label={`فتح ${p.name}`}
                   className={[
-                    "group shark-card relative flex aspect-square w-full flex-col items-center justify-center rounded-3xl p-4 text-center sm:p-6",
+                    "group shark-card relative flex aspect-square w-full overflow-hidden rounded-3xl text-center",
+                    hasProductPhoto(p.image)
+                      ? "bg-black"
+                      : "flex-col items-center justify-center p-4 sm:p-6",
                     "transition hover:border-brand/45 hover:shadow-[0_0_40px_rgba(30,111,217,0.18)] active:scale-[0.985]",
                     "focus:outline-none focus-visible:ring-2 focus-visible:ring-brand/55",
                   ].join(" ")}
                 >
-                  <div
-                    className="pointer-events-none absolute inset-0 rounded-3xl bg-[radial-gradient(ellipse_70%_60%_at_50%_25%,rgba(30,111,217,0.16),transparent_70%)] opacity-80 transition group-hover:opacity-100"
-                    aria-hidden
-                  />
-
-                  <div
-                    className={[
-                      "relative inline-flex items-center justify-center overflow-hidden transition group-hover:border-brand/55",
-                      hasProductPhoto(p.image)
-                        ? "h-[4.5rem] w-[4.5rem] rounded-2xl border border-white/10 bg-black shadow-[0_0_24px_rgba(30,111,217,0.15)] sm:h-24 sm:w-24"
-                        : "h-14 w-14 rounded-2xl border border-brand/30 bg-brand/10 text-brand shadow-[0_0_24px_rgba(30,111,217,0.18)] group-hover:bg-brand/[0.16] sm:h-16 sm:w-16",
-                    ].join(" ")}
-                  >
-                    {hasProductPhoto(p.image) ? (
+                  {hasProductPhoto(p.image) ? (
+                    <>
                       <Image
                         src={p.image}
                         alt={p.name}
-                        width={160}
-                        height={160}
-                        className="h-full w-full object-contain p-1 transition group-hover:scale-[1.04] sm:p-1.5"
+                        fill
+                        sizes="(max-width:640px) 45vw, 320px"
+                        className="object-contain p-3 transition duration-300 group-hover:scale-[1.03] sm:p-4"
                       />
-                    ) : (
-                      productIconByCategory[category.slug] ?? (
-                        <Sparkles className="h-7 w-7" />
-                      )
-                    )}
-                  </div>
-
-                  <div className="relative mt-3 line-clamp-2 text-base font-extrabold leading-tight text-white sm:mt-4 sm:text-xl">
-                    {p.name}
-                  </div>
+                      <div
+                        className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/85 via-black/25 to-transparent"
+                        aria-hidden
+                      />
+                      <div className="absolute inset-x-0 bottom-0 z-10 px-3 pb-3 pt-10 sm:px-4 sm:pb-4">
+                        <div className="line-clamp-2 text-base font-extrabold leading-tight text-white sm:text-xl">
+                          {p.name}
+                        </div>
+                      </div>
+                    </>
+                  ) : (
+                    <>
+                      <div
+                        className="pointer-events-none absolute inset-0 rounded-3xl bg-[radial-gradient(ellipse_70%_60%_at_50%_25%,rgba(30,111,217,0.16),transparent_70%)] opacity-80 transition group-hover:opacity-100"
+                        aria-hidden
+                      />
+                      <div className="relative inline-flex h-14 w-14 items-center justify-center rounded-2xl border border-brand/30 bg-brand/10 text-brand shadow-[0_0_24px_rgba(30,111,217,0.18)] transition group-hover:border-brand/55 group-hover:bg-brand/[0.16] sm:h-16 sm:w-16">
+                        {productIconByCategory[category.slug] ?? (
+                          <Sparkles className="h-7 w-7" />
+                        )}
+                      </div>
+                      <div className="relative mt-3 line-clamp-2 text-base font-extrabold leading-tight text-white sm:mt-4 sm:text-xl">
+                        {p.name}
+                      </div>
+                    </>
+                  )}
                 </Link>
               </motion.li>
             ))}

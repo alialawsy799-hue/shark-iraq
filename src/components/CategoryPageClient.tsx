@@ -14,6 +14,10 @@ const productIconByCategory: Record<CategorySlug, React.ReactNode> = {
   dental: <ShieldPlus className="h-7 w-7 sm:h-8 sm:w-8" />,
 };
 
+function hasProductPhoto(image: string) {
+  return image.startsWith("/products/");
+}
+
 /** يقسّم السطر الفرعي على • بأسلوب عرض أنظف */
 function CategorySubtitle({ text }: { text: string }) {
   const parts = text.split(/\s*•\s*/).map((p) => p.trim()).filter(Boolean);
@@ -160,8 +164,27 @@ export function CategoryPageClient({
                     aria-hidden
                   />
 
-                  <div className="relative inline-flex h-14 w-14 items-center justify-center rounded-2xl border border-brand/30 bg-brand/10 text-brand shadow-[0_0_24px_rgba(30,111,217,0.18)] transition group-hover:border-brand/55 group-hover:bg-brand/[0.16] sm:h-16 sm:w-16">
-                    {productIconByCategory[category.slug] ?? <Sparkles className="h-7 w-7" />}
+                  <div
+                    className={[
+                      "relative inline-flex items-center justify-center overflow-hidden transition group-hover:border-brand/55",
+                      hasProductPhoto(p.image)
+                        ? "h-[4.5rem] w-[4.5rem] rounded-2xl border border-white/10 bg-black shadow-[0_0_24px_rgba(30,111,217,0.15)] sm:h-24 sm:w-24"
+                        : "h-14 w-14 rounded-2xl border border-brand/30 bg-brand/10 text-brand shadow-[0_0_24px_rgba(30,111,217,0.18)] group-hover:bg-brand/[0.16] sm:h-16 sm:w-16",
+                    ].join(" ")}
+                  >
+                    {hasProductPhoto(p.image) ? (
+                      <Image
+                        src={p.image}
+                        alt={p.name}
+                        width={160}
+                        height={160}
+                        className="h-full w-full object-contain p-1 transition group-hover:scale-[1.04] sm:p-1.5"
+                      />
+                    ) : (
+                      productIconByCategory[category.slug] ?? (
+                        <Sparkles className="h-7 w-7" />
+                      )
+                    )}
                   </div>
 
                   <div className="relative mt-3 line-clamp-2 text-base font-extrabold leading-tight text-white sm:mt-4 sm:text-xl">

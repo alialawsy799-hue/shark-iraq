@@ -1,8 +1,11 @@
 import { site } from "@/lib/site";
 import { InstagramGlyph, TelegramGlyph, WhatsAppGlyph } from "./BrandIcons";
 
+const DEVELOPER_WHATSAPP_E164 = "9647736114455";
+
 export function Footer() {
   const whatsappHref = `https://wa.me/${site.whatsappNumberE164.replace(/[^\d]/g, "")}`;
+  const developerWhatsappHref = `https://wa.me/${DEVELOPER_WHATSAPP_E164}`;
   return (
     <footer className="border-t border-brand/25 bg-black/40 shadow-[inset_0_1px_0_rgba(30,111,217,0.12)] backdrop-blur-sm">
       <div className="shark-container py-14">
@@ -79,7 +82,17 @@ export function Footer() {
           <div>
             © {new Date().getFullYear()} ‏{site.name}. جميع الحقوق محفوظة.
           </div>
-          <div className="text-brand/55">هوية مستوحاة من الشعار • حركة سلسة</div>
+          <div className="text-white/55">
+            تمت البرمجة بواسطة علي قاسم للتواصل{" "}
+            <a
+              href={developerWhatsappHref}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-brand/85 underline underline-offset-[3px] decoration-brand/70 transition hover:text-brand hover:decoration-brand"
+            >
+              اضغط هنا
+            </a>
+          </div>
         </div>
       </div>
     </footer>

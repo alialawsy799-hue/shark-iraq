@@ -154,33 +154,34 @@ export function CategoryPageClient({
                   href={`/category/${category.slug}/${p.id}`}
                   aria-label={`فتح ${p.name}`}
                   className={[
-                    "group shark-card relative flex aspect-square w-full overflow-hidden rounded-3xl text-center",
+                    "group shark-card relative w-full overflow-hidden rounded-3xl text-center",
                     hasProductPhoto(p.image)
-                      ? "bg-black"
-                      : "flex-col items-center justify-center p-4 sm:p-6",
+                      ? "block"
+                      : "flex aspect-square flex-col items-center justify-center p-4 sm:p-6",
                     "transition hover:border-brand/45 hover:shadow-[0_0_40px_rgba(30,111,217,0.18)] active:scale-[0.985]",
                     "focus:outline-none focus-visible:ring-2 focus-visible:ring-brand/55",
                   ].join(" ")}
                 >
                   {hasProductPhoto(p.image) ? (
-                    <>
+                    <div className="relative w-full leading-none">
                       <Image
                         src={p.image}
                         alt={p.name}
-                        fill
+                        width={819}
+                        height={1024}
                         sizes="(max-width:640px) 45vw, 320px"
-                        className="object-contain p-3 transition duration-300 group-hover:scale-[1.03] sm:p-4"
+                        className="block h-auto w-full transition duration-300 group-hover:scale-[1.02]"
                       />
                       <div
-                        className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/85 via-black/25 to-transparent"
+                        className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/85 via-black/20 to-transparent"
                         aria-hidden
                       />
-                      <div className="absolute inset-x-0 bottom-0 z-10 px-3 pb-3 pt-10 sm:px-4 sm:pb-4">
+                      <div className="absolute inset-x-0 bottom-0 z-10 px-3 pb-3 pt-8 sm:px-4 sm:pb-4">
                         <div className="line-clamp-2 text-base font-extrabold leading-tight text-white sm:text-xl">
                           {p.name}
                         </div>
                       </div>
-                    </>
+                    </div>
                   ) : (
                     <>
                       <div

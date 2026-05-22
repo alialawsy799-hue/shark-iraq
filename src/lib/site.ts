@@ -1,8 +1,6 @@
 export const site = {
   name: "SHARK TEAM",
   tagline: "القمة في التغذية والتدريب",
-  /** فيديو خلفية الهيرو — YouTube Shorts */
-  heroYoutubeVideoId: "OMWgB3RCF68",
   /** واتساب الاستشارة الطبية والطلب */
   whatsappNumberE164: "9647718669911",
   whatsappNoteAr:

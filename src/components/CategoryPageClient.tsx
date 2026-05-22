@@ -157,7 +157,7 @@ export function CategoryPageClient({
               اختر المنتج
             </h2>
             <p dir="rtl" className="mx-auto mt-3 max-w-2xl leading-7 text-white/70 sm:mx-0">
-              اضغط على أي منتج لعرض الفيديو الشرح وآراء العملاء.
+              اضغط على أي منتج لعرض التفاصيل وآراء العملاء.
             </p>
           </div>
 

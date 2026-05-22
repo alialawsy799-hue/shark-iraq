@@ -272,6 +272,7 @@ export const products: Product[] = [
     bio: "شامبو متخصّص لتقوية بصيلات الشعر والحدّ من التساقط الموسمي.",
     priceIQD: 32000,
     image: "/placeholders/product-demo.png",
+    comingSoon: true,
     howToUseVimeoId: "76979871",
     specs: [
       { label: "الاستخدام", value: "٣–٤ مرات أسبوعياً" },
@@ -286,6 +287,7 @@ export const products: Product[] = [
     bio: "شامبو فعّال ضد القشرة لفروة نظيفة ومرتاحة مع الاستخدام المنتظم.",
     priceIQD: 30000,
     image: "/placeholders/product-demo.png",
+    comingSoon: true,
     howToUseVimeoId: "76979871",
     specs: [
       { label: "الاستخدام", value: "مرتين أسبوعياً" },
@@ -296,10 +298,11 @@ export const products: Product[] = [
   {
     id: "hair-conditioner",
     category: "hair-care",
-    name: "مكيف شعر",
+    name: "مكيف قشرة",
     bio: "مكيّف مغذٍّ يمنح الشعر نعومة ولمعاناً صحياً بعد كل غسلة.",
     priceIQD: 28000,
     image: "/placeholders/product-demo.png",
+    comingSoon: true,
     howToUseVimeoId: "76979871",
     specs: [
       { label: "الاستخدام", value: "بعد الشامبو" },

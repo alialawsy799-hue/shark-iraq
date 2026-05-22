@@ -8,24 +8,6 @@ import { ProductImageCarousel } from "./ProductImageCarousel";
 import { buildWhatsappOrderMessage, buildWhatsappUrl, site } from "@/lib/site";
 import { SharkFeedbackSection } from "./Reviews";
 
-function VimeoLargeEmbed({ vimeoId, title }: { vimeoId: string; title: string }) {
-  const src = `https://player.vimeo.com/video/${encodeURIComponent(
-    vimeoId
-  )}?title=0&byline=0&portrait=0&playsinline=1`;
-  return (
-    <div className="relative mx-auto w-full max-w-4xl overflow-hidden rounded-3xl border border-white/10 bg-black/40 shadow-[0_0_48px_rgba(30,111,217,0.12)] ring-1 ring-brand/15">
-      <div className="aspect-video w-full min-h-[200px]">
-        <iframe
-          src={src}
-          className="h-full w-full"
-          allow="autoplay; fullscreen; picture-in-picture"
-          title={title}
-        />
-      </div>
-    </div>
-  );
-}
-
 export function ProductPageClient({
   category,
   product,
@@ -113,26 +95,6 @@ export function ProductPageClient({
               </div>
             </div>
           </motion.div>
-        </div>
-      </section>
-
-      {/* فيديو الشرح */}
-      <section className="border-t border-white/[0.06] bg-white/[0.02] py-12 sm:py-16">
-        <div className="shark-container">
-          <div className="mx-auto max-w-3xl text-center">
-            <p className="text-[11px] font-bold uppercase tracking-[0.2em] text-white/40">
-              فيديو شرح المنتج
-            </p>
-            <h2 dir="rtl" className="mt-1 text-xl font-extrabold text-white sm:text-2xl">
-              شرح مرئي لـ {product.name}
-            </h2>
-          </div>
-          <div className="mt-8 sm:mt-10">
-            <VimeoLargeEmbed
-              vimeoId={product.howToUseVimeoId}
-              title={`فيديو شرح • ${product.name}`}
-            />
-          </div>
         </div>
       </section>
 

@@ -200,8 +200,11 @@ export const products: Product[] = [
       "⚠️ يجب الاطلاع على التحذيرات وشروط الاستخدام ومراجعة الكادر الطبي والتأكد من إمكانية الاستخدام عبر رابط الواتساب ⚠️",
     ].join("\n\n"),
     priceIQD: 42000,
-    image: "/products/shark-burner.png",
-    gallery: ["/products/shark-burner.png", "/products/shark-burner-carousel-2.png"],
+    image: "/products/shark-burner-carousel-1.png",
+    gallery: [
+      "/products/shark-burner-carousel-1.png",
+      "/products/shark-burner-carousel-2.png",
+    ],
     howToUseVimeoId: "76979871",
     specs: [
       { label: "حجم الجرعة", value: "كبسولة واحدة" },

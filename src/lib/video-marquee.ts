@@ -51,7 +51,7 @@ function buildViewCounts(count: number): number[] {
 
 /**
  * القائمة الأصلية للفيديوهات الفريدة (بدون تكرار). الترتيب هنا = ترتيب الظهور.
- * نمط الصفوف على الموقع: 5 - 4 - 5 - 4 - 5 - 4 - 5 - 4 - 5 (9 صفوف = 41 بطاقة).
+ * نمط الصفوف على الموقع: … - 5 - 4 (14 صف = 63 بطاقة).
  */
 const sourceVideos: Pick<MarqueeClip, "vimeoId">[] = [
   // الصف 1 (5)
@@ -104,10 +104,37 @@ const sourceVideos: Pick<MarqueeClip, "vimeoId">[] = [
   { vimeoId: "1191530767" },
   { vimeoId: "1191530583" },
   { vimeoId: "1191530707" },
+  // الصف 10 (4)
+  { vimeoId: "1213019263" },
+  { vimeoId: "1213019275" },
+  { vimeoId: "1213019255" },
+  { vimeoId: "1213019278" },
+  // الصف 11 (5)
+  { vimeoId: "1213019448" },
+  { vimeoId: "1213019318" },
+  { vimeoId: "1213019353" },
+  { vimeoId: "1213019326" },
+  { vimeoId: "1213019323" },
+  // الصف 12 (4)
+  { vimeoId: "1213019569" },
+  { vimeoId: "1213019574" },
+  { vimeoId: "1213019572" },
+  { vimeoId: "1213019563" },
+  // الصف 13 (5)
+  { vimeoId: "1213019621" },
+  { vimeoId: "1213019632" },
+  { vimeoId: "1213019639" },
+  { vimeoId: "1213019624" },
+  { vimeoId: "1213019628" },
+  // الصف 14 (4)
+  { vimeoId: "1213019665" },
+  { vimeoId: "1213019683" },
+  { vimeoId: "1213019678" },
+  { vimeoId: "1213019671" },
 ];
 
-/** عدد البطاقات الإجمالي = 5+4+5+4+5+4+5+4+5 = 41 بطاقة → 9 صفوف */
-const TOTAL_CLIPS = 41;
+/** عدد البطاقات الإجمالي = 63 بطاقة → 14 صف */
+const TOTAL_CLIPS = 63;
 
 const VIEW_COUNTS = buildViewCounts(TOTAL_CLIPS);
 

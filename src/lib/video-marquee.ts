@@ -16,6 +16,9 @@ export type MarqueeClip = {
   viewCount: number;
 };
 
+/** زِد هذا الرقم عند تحديث أغلفة الفيديوهات على Vimeo */
+export const VIMEO_THUMB_REFRESH = "20260804";
+
 /** تنسيق 520K أو 7.1M */
 export function formatViewCount(views: number): string {
   if (views >= 1_000_000) {

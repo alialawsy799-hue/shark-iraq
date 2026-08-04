@@ -5,7 +5,7 @@ import { AnimatePresence, motion } from "framer-motion";
 import { X } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
 import type { MarqueeClip } from "@/lib/video-marquee";
-import { defaultMarqueeVideos, formatViewCount } from "@/lib/video-marquee";
+import { defaultMarqueeVideos, formatViewCount, VIMEO_THUMB_REFRESH } from "@/lib/video-marquee";
 
 type Props = {
   videos?: MarqueeClip[];
@@ -30,17 +30,21 @@ function chunkAlternating(videos: MarqueeClip[]): MarqueeClip[][] {
   return rows;
 }
 
-/** جلب thumbnail مباشرة من Vimeo (يعكس الصورة المخصّصة في إعدادات الفيديو) */
+/** جلب thumbnail مباشرة من Vimeo (يعكس الكفر المخصّص في إعدادات الفيديو) */
 async function fetchVimeoThumbnail(vimeoId: string): Promise<string | null> {
   try {
     const res = await fetch(
       `https://vimeo.com/api/oembed.json?url=${encodeURIComponent(
         `https://vimeo.com/${vimeoId}`
-      )}&width=1280`
+      )}&width=1280`,
+      { cache: "no-store" }
     );
     if (!res.ok) return null;
     const data = (await res.json()) as { thumbnail_url?: string };
-    return data.thumbnail_url ?? null;
+    const raw = data.thumbnail_url;
+    if (!raw) return null;
+    const sep = raw.includes("?") ? "&" : "?";
+    return `${raw}${sep}v=${VIMEO_THUMB_REFRESH}`;
   } catch {
     return null;
   }
@@ -73,7 +77,7 @@ function useVimeoThumbnails(uniqueIds: string[]) {
     return () => {
       cancelled = true;
     };
-  }, [idsKey]);
+  }, [idsKey, VIMEO_THUMB_REFRESH]);
 
   return thumbs;
 }

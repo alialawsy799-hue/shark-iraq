@@ -54,7 +54,7 @@ function buildViewCounts(count: number): number[] {
 
 /**
  * القائمة الأصلية للفيديوهات الفريدة (بدون تكرار). الترتيب هنا = ترتيب الظهور.
- * نمط الصفوف على الموقع: … - 5 - 4 (14 صف = 63 بطاقة).
+ * نمط الصفوف على الموقع: … - 5 - 4 (15 صف = 68 بطاقة).
  */
 const sourceVideos: Pick<MarqueeClip, "vimeoId">[] = [
   // الصف 1 (5)
@@ -134,10 +134,16 @@ const sourceVideos: Pick<MarqueeClip, "vimeoId">[] = [
   { vimeoId: "1213019683" },
   { vimeoId: "1213019678" },
   { vimeoId: "1213019671" },
+  // الصف 15 (5)
+  { vimeoId: "1236588333" },
+  { vimeoId: "1236586751" },
+  { vimeoId: "1236585329" },
+  { vimeoId: "1236585327" },
+  { vimeoId: "1236585328" },
 ];
 
-/** عدد البطاقات الإجمالي = 63 بطاقة → 14 صف */
-const TOTAL_CLIPS = 63;
+/** عدد البطاقات الإجمالي = 68 بطاقة → 15 صف */
+const TOTAL_CLIPS = 68;
 
 const VIEW_COUNTS = buildViewCounts(TOTAL_CLIPS);
 

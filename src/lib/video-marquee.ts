@@ -58,11 +58,11 @@ function buildViewCounts(count: number): number[] {
  */
 const sourceVideos: Pick<MarqueeClip, "vimeoId">[] = [
   // الصف 1 (5)
-  { vimeoId: "1191528755" }, // أول فيديو من اليمين
-  { vimeoId: "1191349877" },
-  { vimeoId: "1191349875" },
-  { vimeoId: "1191529174" }, // ثاني من اليسار
-  { vimeoId: "1191349872" },
+  { vimeoId: "1236588333" }, // أول فيديو من اليمين
+  { vimeoId: "1236586751" },
+  { vimeoId: "1236585329" },
+  { vimeoId: "1236585327" }, // ثاني من اليسار
+  { vimeoId: "1236585328" },
   // الصف 2 (4)
   { vimeoId: "1191352195" },
   { vimeoId: "1191352236" },
@@ -135,11 +135,11 @@ const sourceVideos: Pick<MarqueeClip, "vimeoId">[] = [
   { vimeoId: "1213019678" },
   { vimeoId: "1213019671" },
   // الصف 15 (5)
-  { vimeoId: "1236588333" },
-  { vimeoId: "1236586751" },
-  { vimeoId: "1236585329" },
-  { vimeoId: "1236585327" },
-  { vimeoId: "1236585328" },
+  { vimeoId: "1191528755" },
+  { vimeoId: "1191349877" },
+  { vimeoId: "1191349875" },
+  { vimeoId: "1191529174" },
+  { vimeoId: "1191349872" },
 ];
 
 /** عدد البطاقات الإجمالي = 68 بطاقة → 15 صف */

@@ -58,11 +58,11 @@ function buildViewCounts(count: number): number[] {
  */
 const sourceVideos: Pick<MarqueeClip, "vimeoId">[] = [
   // الصف 1 (5)
-  { vimeoId: "1236588333" }, // أول فيديو من اليمين
-  { vimeoId: "1236586751" },
-  { vimeoId: "1236585329" },
-  { vimeoId: "1236585327" }, // ثاني من اليسار
+  { vimeoId: "1236585327" }, // أول فيديو من اليمين
   { vimeoId: "1236585328" },
+  { vimeoId: "1236585329" },
+  { vimeoId: "1236588333" }, // ثاني من اليسار
+  { vimeoId: "1236586751" },
   // الصف 2 (4)
   { vimeoId: "1191352195" },
   { vimeoId: "1191352236" },

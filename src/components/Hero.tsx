@@ -3,6 +3,7 @@
 import Image from "next/image";
 import { motion } from "framer-motion";
 import { ArrowUpLeft } from "lucide-react";
+import { AppleGlyph, GooglePlayGlyph } from "./BrandIcons";
 import { arabicBioPlaceholder, heroHeadlineAr } from "@/lib/data";
 import { site } from "@/lib/site";
 
@@ -112,6 +113,51 @@ export function Hero() {
               className="text-sm font-medium text-white/45 underline decoration-brand/40 decoration-2 underline-offset-[6px] transition hover:text-white/80"
             >
               لماذا SHARK TEAM؟
+            </a>
+          </div>
+        </motion.div>
+
+        <motion.div
+          initial={{ opacity: 0, y: 16 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.55, delay: 0.12, ease: [0.22, 1, 0.36, 1] }}
+          className="mx-auto mt-10 w-full max-w-[1024px] sm:mt-12"
+        >
+          <Image
+            src="/branding/shark-fit-app-banner.jpg"
+            alt="حمّل تطبيق شارك"
+            width={1024}
+            height={368}
+            className="h-auto w-full rounded-2xl border border-brand/45 object-contain shadow-[0_0_0_1px_rgba(43,126,235,0.22),0_0_28px_rgba(30,111,217,0.35),0_16px_48px_rgba(0,0,0,0.4)]"
+            sizes="(max-width: 1024px) 100vw, 1024px"
+            unoptimized
+            priority
+          />
+
+          <p
+            dir="rtl"
+            className="mt-5 text-center text-sm font-semibold text-white/80 sm:mt-6 sm:text-base"
+          >
+            اضغط للتنزيل
+          </p>
+          <div className="mt-3 flex items-center justify-center gap-3">
+            <a
+              href={site.appStoreUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label="تنزيل من App Store"
+              className="inline-flex size-12 items-center justify-center rounded-xl border border-brand/30 bg-white/[0.06] text-white shadow-[0_0_0_1px_rgba(43,126,235,0.12),0_0_16px_rgba(30,111,217,0.18)] transition hover:border-brand/50 hover:bg-brand/10 hover:shadow-[0_0_0_1px_rgba(43,126,235,0.22),0_0_22px_rgba(30,111,217,0.28)] sm:size-[3.25rem]"
+            >
+              <AppleGlyph className="h-6 w-6 sm:h-7 sm:w-7" />
+            </a>
+            <a
+              href={site.playStoreUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label="تنزيل من Google Play"
+              className="inline-flex size-12 items-center justify-center rounded-xl border border-brand/30 bg-white/[0.06] text-white shadow-[0_0_0_1px_rgba(43,126,235,0.12),0_0_16px_rgba(30,111,217,0.18)] transition hover:border-brand/50 hover:bg-brand/10 hover:shadow-[0_0_0_1px_rgba(43,126,235,0.22),0_0_22px_rgba(30,111,217,0.28)] sm:size-[3.25rem]"
+            >
+              <GooglePlayGlyph className="h-6 w-6 sm:h-7 sm:w-7" />
             </a>
           </div>
         </motion.div>

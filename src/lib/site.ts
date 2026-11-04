@@ -2,7 +2,7 @@ export const site = {
   name: "SHARK TEAM",
   tagline: "القمة في التغذية والتدريب",
   /** واتساب الاستشارة الطبية والطلب */
-  whatsappNumberE164: "9647718669911",
+  whatsappNumberE164: "9647731612753",
   whatsappNoteAr:
     "ملاحظة: الطلب يكون عبر واتساب للحصول على استشارة صحية أفضل قبل الشراء.",
   appStoreUrl: "https://apps.apple.com/dk/app/shark-fit/id6774619074",

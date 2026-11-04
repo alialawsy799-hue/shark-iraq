@@ -13,6 +13,10 @@ export function buildWhatsappOrderMessage(productName: string) {
   return `مرحباً SHARK TEAM، أرغب بطلب منتج «${productName}» مع الحصول على استشارة.`;
 }
 
+export function buildWhatsappProductsMessage() {
+  return "مرحباً SHARK TEAM، أرغب بطلب المنتجات مع الحصول على استشارة.";
+}
+
 export function buildWhatsappUrl(message: string, numberE164 = site.whatsappNumberE164) {
   const text = encodeURIComponent(message);
   const cleaned = numberE164.replace(/[^\d]/g, "");

@@ -2,10 +2,17 @@
 
 import Image from "next/image";
 import { motion } from "framer-motion";
-import { ArrowUpLeft } from "lucide-react";
-import { AppleGlyph, GooglePlayGlyph } from "./BrandIcons";
+import { AppleGlyph, GooglePlayGlyph, WhatsAppGlyph } from "./BrandIcons";
 import { arabicBioPlaceholder, heroHeadlineAr } from "@/lib/data";
-import { site } from "@/lib/site";
+import { buildWhatsappProductsMessage, buildWhatsappUrl, site } from "@/lib/site";
+
+const storeBtnClass = [
+  "inline-flex size-11 items-center justify-center rounded-xl border border-brand/30 bg-white/[0.06] text-white",
+  "shadow-[0_0_0_1px_rgba(43,126,235,0.12),0_0_16px_rgba(30,111,217,0.18)]",
+  "transition hover:border-brand/50 hover:bg-brand/10",
+  "hover:shadow-[0_0_0_1px_rgba(43,126,235,0.22),0_0_22px_rgba(30,111,217,0.28)]",
+  "sm:size-12",
+].join(" ");
 
 /** يفصل العنوان لإبراز الجزء العربي باللون */
 function HeadlineDisplay() {
@@ -29,6 +36,8 @@ function HeadlineDisplay() {
 }
 
 export function Hero() {
+  const productsWhatsappHref = buildWhatsappUrl(buildWhatsappProductsMessage());
+
   return (
     <section className="relative min-w-0 overflow-x-clip pt-12 pb-16 sm:pt-14 sm:pb-20">
       <div
@@ -100,66 +109,84 @@ export function Hero() {
             {arabicBioPlaceholder}
           </p>
 
-          <div className="mt-8 flex flex-col items-center gap-3 sm:mt-10 sm:flex-row sm:gap-4">
-            <a
-              href="#categories"
-              className="group inline-flex h-11 items-center justify-center gap-2 rounded-full border border-white/12 bg-white/[0.06] px-6 text-sm font-semibold text-white shadow-[0_0_40px_rgba(30,111,217,0.12)] transition hover:border-brand/35 hover:bg-brand/10"
-            >
-              ابدأ اليوم
-              <ArrowUpLeft className="h-4 w-4 transition group-hover:-translate-y-0.5 group-hover:translate-x-0.5" />
-            </a>
-            <a
-              href="#why-shark"
-              className="text-sm font-medium text-white/45 underline decoration-brand/40 decoration-2 underline-offset-[6px] transition hover:text-white/80"
-            >
-              لماذا SHARK TEAM؟
-            </a>
-          </div>
+          <a
+            href="#why-shark"
+            className="mt-8 text-sm font-medium text-white/45 underline decoration-brand/40 decoration-2 underline-offset-[6px] transition hover:text-white/80 sm:mt-10"
+          >
+            لماذا SHARK TEAM؟
+          </a>
         </motion.div>
 
         <motion.div
           initial={{ opacity: 0, y: 16 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.55, delay: 0.12, ease: [0.22, 1, 0.36, 1] }}
-          className="mx-auto mt-10 w-full max-w-[1024px] sm:mt-12"
+          dir="ltr"
+          className="mx-auto mt-10 grid w-full max-w-4xl items-center gap-8 sm:mt-12 md:grid-cols-[1fr_auto_1fr] md:gap-6 lg:gap-8"
         >
-          <Image
-            src="/branding/shark-fit-app-banner.jpg"
-            alt="حمّل تطبيق شارك"
-            width={1024}
-            height={368}
-            className="h-auto w-full rounded-2xl border border-brand/45 object-contain shadow-[0_0_0_1px_rgba(43,126,235,0.22),0_0_28px_rgba(30,111,217,0.35),0_16px_48px_rgba(0,0,0,0.4)]"
-            sizes="(max-width: 1024px) 100vw, 1024px"
-            unoptimized
-            priority
+          {/* يسار الشاشة: صورة التطبيق ومتاجر التحميل */}
+          <div className="flex flex-col items-center">
+            <div className="w-full overflow-hidden rounded-2xl border border-brand/35 bg-black/30 shadow-[0_0_0_1px_rgba(43,126,235,0.16),0_0_28px_rgba(30,111,217,0.22)]">
+              <Image
+                src="/branding/shark-fit-app.jpg"
+                alt="حمّل تطبيق شارك"
+                width={1440}
+                height={960}
+                className="h-auto w-full"
+                sizes="(min-width: 768px) 28rem, 100vw"
+                priority
+                unoptimized
+              />
+            </div>
+            <div className="mt-4 flex items-center justify-center gap-3">
+              <a
+                href={site.appStoreUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="تنزيل من App Store"
+                className={storeBtnClass}
+              >
+                <AppleGlyph className="h-5 w-5 sm:h-6 sm:w-6" />
+              </a>
+              <a
+                href={site.playStoreUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="تنزيل من Google Play"
+                className={storeBtnClass}
+              >
+                <GooglePlayGlyph className="h-5 w-5 sm:h-6 sm:w-6" />
+              </a>
+            </div>
+          </div>
+
+          <div
+            className="mx-auto h-px w-16 bg-brand/55 md:h-16 md:w-px"
+            aria-hidden
           />
 
-          <p
-            dir="rtl"
-            className="mt-5 text-center text-sm font-semibold text-white/80 sm:mt-6 sm:text-base"
+          {/* يمين الشاشة: طلب المنتجات واتساب */}
+          <a
+            href={productsWhatsappHref}
+            target="_blank"
+            rel="noopener noreferrer"
+            className={[
+              "flex min-h-[180px] flex-col items-center justify-center gap-5 rounded-2xl px-5 py-7 text-center",
+              "border border-white/10 bg-white/[0.04]",
+              "shadow-[0_0_0_1px_rgba(30,111,217,0.12),0_12px_40px_rgba(0,0,0,0.28)]",
+              "transition hover:border-brand/35 hover:bg-white/[0.06]",
+            ].join(" ")}
           >
-            اضغط للتنزيل
-          </p>
-          <div className="mt-3 flex items-center justify-center gap-3">
-            <a
-              href={site.appStoreUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              aria-label="تنزيل من App Store"
-              className="inline-flex size-12 items-center justify-center rounded-xl border border-brand/30 bg-white/[0.06] text-white shadow-[0_0_0_1px_rgba(43,126,235,0.12),0_0_16px_rgba(30,111,217,0.18)] transition hover:border-brand/50 hover:bg-brand/10 hover:shadow-[0_0_0_1px_rgba(43,126,235,0.22),0_0_22px_rgba(30,111,217,0.28)] sm:size-[3.25rem]"
+            <p
+              dir="rtl"
+              className="text-base font-extrabold leading-8 text-white sm:text-lg"
             >
-              <AppleGlyph className="h-6 w-6 sm:h-7 sm:w-7" />
-            </a>
-            <a
-              href={site.playStoreUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              aria-label="تنزيل من Google Play"
-              className="inline-flex size-12 items-center justify-center rounded-xl border border-brand/30 bg-white/[0.06] text-white shadow-[0_0_0_1px_rgba(43,126,235,0.12),0_0_16px_rgba(30,111,217,0.18)] transition hover:border-brand/50 hover:bg-brand/10 hover:shadow-[0_0_0_1px_rgba(43,126,235,0.22),0_0_22px_rgba(30,111,217,0.28)] sm:size-[3.25rem]"
-            >
-              <GooglePlayGlyph className="h-6 w-6 sm:h-7 sm:w-7" />
-            </a>
-          </div>
+              اطلب المنتجات من الواتساب
+            </p>
+            <span className="grid h-12 w-12 place-items-center rounded-xl bg-[#25D366] text-white ring-1 ring-[#25D366]/55 shadow-[0_0_18px_rgba(37,211,102,0.45)]">
+              <WhatsAppGlyph className="h-6 w-6" />
+            </span>
+          </a>
         </motion.div>
       </div>
     </section>

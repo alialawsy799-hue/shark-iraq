@@ -37,8 +37,8 @@ export function Footer() {
                   <WhatsAppGlyph className="h-5 w-5" />
                 </span>
                 <span className="text-sm font-semibold">واتساب</span>
-                <span className="ms-auto text-xs text-white/70">استشارة طبية وطلب</span>
               </a>
+              <p className="text-center text-xs text-white/70">استشارة طبية وطلب</p>
             </div>
           </div>
         </div>

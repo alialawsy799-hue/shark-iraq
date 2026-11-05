@@ -122,7 +122,7 @@ export function Hero() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.55, delay: 0.12, ease: [0.22, 1, 0.36, 1] }}
           dir="ltr"
-          className="mx-auto mt-10 grid w-full max-w-4xl items-center gap-8 sm:mt-12 md:grid-cols-[1fr_auto_1fr] md:gap-6 lg:gap-8"
+          className="mx-auto mt-10 grid w-full max-w-5xl grid-cols-[minmax(0,1fr)_auto_minmax(0,1fr)] items-center gap-4 sm:mt-12 sm:gap-6 lg:gap-8"
         >
           {/* يسار الشاشة: صورة التطبيق ومتاجر التحميل */}
           <div className="flex flex-col items-center">
@@ -133,7 +133,7 @@ export function Hero() {
                 width={1440}
                 height={960}
                 className="h-auto w-full"
-                sizes="(min-width: 768px) 28rem, 100vw"
+                sizes="(min-width: 768px) 28rem, 50vw"
                 priority
                 unoptimized
               />
@@ -161,32 +161,32 @@ export function Hero() {
           </div>
 
           <div
-            className="mx-auto h-px w-16 bg-brand/55 md:h-16 md:w-px"
+            className="h-24 w-px self-center bg-brand/55 sm:h-28"
             aria-hidden
           />
 
-          {/* يمين الشاشة: طلب المنتجات واتساب */}
-          <a
-            href={productsWhatsappHref}
-            target="_blank"
-            rel="noopener noreferrer"
-            className={[
-              "flex min-h-[180px] flex-col items-center justify-center gap-5 rounded-2xl px-5 py-7 text-center",
-              "border border-white/10 bg-white/[0.04]",
-              "shadow-[0_0_0_1px_rgba(30,111,217,0.12),0_12px_40px_rgba(0,0,0,0.28)]",
-              "transition hover:border-brand/35 hover:bg-white/[0.06]",
-            ].join(" ")}
-          >
-            <p
-              dir="rtl"
-              className="text-base font-extrabold leading-8 text-white sm:text-lg"
-            >
-              اطلب المنتجات من الواتساب
-            </p>
-            <span className="grid h-12 w-12 place-items-center rounded-xl bg-[#25D366] text-white ring-1 ring-[#25D366]/55 shadow-[0_0_18px_rgba(37,211,102,0.45)]">
-              <WhatsAppGlyph className="h-6 w-6" />
-            </span>
-          </a>
+          {/* يمين الشاشة: نفس مستطيل واتساب أسفل الموقع */}
+          <div dir="rtl" className="flex flex-col justify-center">
+            <div className="text-sm font-semibold text-white">تواصل</div>
+            <div className="mt-4">
+              <a
+                href={productsWhatsappHref}
+                target="_blank"
+                rel="noopener noreferrer"
+                className={[
+                  "inline-flex w-full items-center gap-3 rounded-xl border px-4 py-3 transition",
+                  "border-[#25D366]/45 bg-[#25D366]/12 text-white shadow-[0_0_24px_rgba(37,211,102,0.12)]",
+                  "hover:border-[#25D366]/70 hover:bg-[#25D366]/20 hover:shadow-[0_0_28px_rgba(37,211,102,0.22)]",
+                ].join(" ")}
+              >
+                <span className="grid h-10 w-10 shrink-0 place-items-center rounded-lg bg-[#25D366] text-white ring-1 ring-[#25D366]/55 shadow-[0_0_18px_rgba(37,211,102,0.45)]">
+                  <WhatsAppGlyph className="h-5 w-5" />
+                </span>
+                <span className="text-sm font-semibold">واتساب</span>
+              </a>
+              <p className="mt-2 text-center text-xs text-white/70">استشارة طبية وطلب</p>
+            </div>
+          </div>
         </motion.div>
       </div>
     </section>
